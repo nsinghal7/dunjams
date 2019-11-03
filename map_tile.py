@@ -39,3 +39,4 @@ class MapTile(InstructionGroup):
     def on_update(self):
         location = self.map.tile_to_pixels(self.position)
         self.rect.pos = location
+        self.rect.size = self.map.tile_size()

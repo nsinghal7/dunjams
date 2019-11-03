@@ -7,7 +7,6 @@ import numpy as np
 from map_tile import MapTile, PLAYER_START
 
 VIEW_SPEED = 5
-TILE_SIZE = np.min(Window.size) / 11
 
 class Map(InstructionGroup):
     def __init__(self, map_filename):
@@ -69,7 +68,8 @@ class Map(InstructionGroup):
         return len(self.tiles), len(self.tiles[0])
 
     def tile_size(self):
-        return TILE_SIZE, TILE_SIZE
+        size = np.min(Window.size) / 11
+        return size, size
 
     def tile_to_pixels(self, position):
         row, col = position

@@ -57,3 +57,4 @@ class PlayerGraphic(EntityGraphic):
             self.position = self.position + delta
 
         self.rect.pos = self.map.tile_to_pixels(self.position)
+        self.rect.size = self.map.tile_size()
