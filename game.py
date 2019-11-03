@@ -36,7 +36,7 @@ class Level(InstructionGroup):
         for eg in self.enemy_groups:
             self.add(eg)
 
-        self.player = Player(self.map.player_start_location())
+        self.player = Player(self.map)
         self.add(self.player)
 
         now = self.sched.get_tick()
