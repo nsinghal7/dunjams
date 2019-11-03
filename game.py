@@ -3,7 +3,7 @@ from common.audio import Audio
 from common.mixer import Mixer
 from common.wavegen import WaveGenerator
 from common.wavesrc import WaveBuffer, WaveFile, make_wave_buffers
-from common.clock import SimpleTempoMap, AudioScheduler, kTicksPerQuarter
+from common.clock import SimpleTempoMap, AudioScheduler, kTicksPerQuarter, quantize_tick_up
 
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
@@ -15,6 +15,8 @@ from music_controller import MusicController
 from movement_controller import MovementController
 
 WORLD = "data/basic_world"
+EPSILON_BEFORE_TICKS = 60
+EPSILON_AFTER_TICKS = 20
 
 class Game(BaseWidget):
     def __init__(self):
@@ -28,8 +30,8 @@ class Game(BaseWidget):
         self.audio.set_generator(self.sched)
         self.sched.set_generator(self.mixer)
 
-        self.music_controller = None # TODO
-        self.movement_controller = None # TODO
+        self.music_controller = MusicController()
+        self.movement_controller = MovementController()
 
 
         # load game
@@ -51,15 +53,23 @@ class Game(BaseWidget):
         # TODO load player and enemies
         self.map = Map(WORLD + "/" + self.level_names[self.level_index] + "/map.txt")
         print(self.map.player_start_location())
+        now = self.sched.get_tick()
+
+        next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
+        next_pre_beat = next_beat - EPSILON_BEFORE_TICKS
+
+        self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
+        self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_beat)
 
     def beat_on(self, tick, _):
-        self.sched.post_at_tick(self.beat_on, tick + kTicksPerQuarter)
+        self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, tick + kTicksPerQuarter)
         self.music_controller.beat_on()
         self.movement_controller.beat_on()
+        print("beat on")
 
     def beat_off(self, tick, _):
-        self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
-        # TODO
+        self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
+        print("beat off")
 
 
     def on_update(self):
