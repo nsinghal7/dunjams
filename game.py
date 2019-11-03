@@ -19,42 +19,16 @@ WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 60
 EPSILON_AFTER_TICKS = 20
 
-class Game(BaseWidget):
-    def __init__(self):
-        super(Game, self).__init__()
+class Level(InstructionGroup):
+    def __init__(self, level_name, mixer, sched, music_controller, movement_controller):
+        super(Level, self).__init__()
+        self.mixer = mixer
+        self.sched = sched
+        self.music_controller = music_controller
+        self.movement_controller = movement_controller
 
-        # audio setup
-        self.audio = Audio(2)
-        self.mixer = Mixer()
-        self.tempo_map = SimpleTempoMap(120)
-        self.sched = AudioScheduler(self.tempo_map)
-        self.audio.set_generator(self.sched)
-        self.sched.set_generator(self.mixer)
-
-        self.music_controller = MusicController()
-        self.movement_controller = MovementController()
-
-
-        # load game
-        with open(WORLD + "/game_info.txt") as game_info:
-            self.num_levels = int(game_info.readline().strip())
-            self.level_names = []
-            for _ in range(self.num_levels):
-                self.level_names.append(game_info.readline().strip())
-
-        self.level_index = 0
-        self.load_level()
-
-    def unload_level(self):
-        # TODO: unload the level: remove all graphics and stop stuff from the previous level
-        pass
-
-    def load_level(self):
-        # for now this only involves loading the map and creating the player and enemies
-        # TODO enemies
-        self.map = Map(WORLD + "/" + self.level_names[self.level_index] + "/map.txt")
-        print(self.map.player_start_location())
-
+        self.map = Map(WORLD + "/" + level_name + "/map.txt")
+        # TODO: actually load enemies
         self.enemy_groups = []
         self.player = Player(self.map.player_start_location())
 
@@ -87,8 +61,40 @@ class Game(BaseWidget):
 
         print("beat off")
 
+    def on_update(self):
+        pass
+
+class Game(BaseWidget):
+    def __init__(self):
+        super(Game, self).__init__()
+
+        # audio setup
+        self.audio = Audio(2)
+        self.mixer = Mixer()
+        self.tempo_map = SimpleTempoMap(120)
+        self.sched = AudioScheduler(self.tempo_map)
+        self.audio.set_generator(self.sched)
+        self.sched.set_generator(self.mixer)
+
+        self.music_controller = MusicController()
+        self.movement_controller = MovementController()
+
+
+        # load game
+        with open(WORLD + "/game_info.txt") as game_info:
+            self.num_levels = int(game_info.readline().strip())
+            self.level_names = []
+            for _ in range(self.num_levels):
+                self.level_names.append(game_info.readline().strip())
+
+        self.level_index = 0
+        self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
+                            self.music_controller, self.movement_controller)
+        self.canvas.add(self.level)
+
 
     def on_update(self):
+        self.level.on_update()
         self.audio.on_update()
 
 if __name__ == '__main__':
