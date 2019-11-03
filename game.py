@@ -17,8 +17,8 @@ from player import Player
 from enemy_group import EnemyGroup, enemy_groups_from_spec
 
 WORLD = "data/basic_world"
-EPSILON_BEFORE_TICKS = 80
-EPSILON_AFTER_TICKS = 30
+EPSILON_BEFORE_TICKS = 40
+EPSILON_AFTER_TICKS = 100
 
 class Level(InstructionGroup):
     def __init__(self, level_name, mixer, sched, music_controller, movement_controller):
@@ -42,15 +42,22 @@ class Level(InstructionGroup):
         now = self.sched.get_tick()
         next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
         next_pre_beat = next_beat - EPSILON_BEFORE_TICKS
+        next_post_beat = next_beat + EPSILON_AFTER_TICKS
 
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
-        self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_beat)
+        self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, next_beat)
+        self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_post_beat)
 
     def beat_on(self, tick, _):
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, tick + kTicksPerQuarter)
         self.music_controller.beat_on()
         self.movement_controller.beat_on()
         print("beat on")
+
+    def beat_on_exact(self, tick, _):
+        self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, tick + kTicksPerQuarter)
+        for eg in self.enemy_groups:
+            eg.on_beat_exact()
 
     def beat_off(self, tick, _):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)

@@ -1,4 +1,5 @@
 from common.core import lookup
+from time import time
 
 class MovementController:
     def __init__(self):
@@ -8,6 +9,7 @@ class MovementController:
         self.movement = None
 
     def beat_off(self):
+        # self.off_time = time()
         pass
 
     def on_key_down(self, keycode, modifiers):

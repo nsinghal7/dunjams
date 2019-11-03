@@ -31,12 +31,13 @@ class EnemyGroup(InstructionGroup):
     def is_pacified(self):
         return self.melody_progress >= len(self.melody)
 
-    def on_beat(self, map, music, movement):
-        # play desired note
+    def on_beat_exact(self):
+        # play melody exactly on the beat so it doesn't sound weird
         note = NoteGenerator(self.melody[self.melody_index], .3)
         env = Envelope(note, .1, 1, .3, 1)
         self.mixer.add(env)
 
+    def on_beat(self, map, music, movement):
         # check if player sang correct note (or if no note was required)
         if self.melody[self.melody_index] == 0 or (music.is_pitch() and
                         music.get_midi() == self.melody[self.melody_index]):
