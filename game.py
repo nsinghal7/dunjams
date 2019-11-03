@@ -11,6 +11,8 @@ from kivy.graphics import PushMatrix, PopMatrix, Translate
 from kivy.clock import Clock as kivyClock
 
 from map import Map
+from music_controller import MusicController
+from movement_controller import MovementController
 
 WORLD = "data/basic_world"
 
