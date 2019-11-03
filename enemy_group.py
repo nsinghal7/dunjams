@@ -5,17 +5,19 @@ from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
 
 from common.gfxutil import AnimGroup
+from common.note import NoteGenerator, Envelope
 
 from enemy import Enemy
 
-def enemy_groups_from_spec(filename, map):
+def enemy_groups_from_spec(filename, map, mixer):
     with open(filename) as f:
         data = json.load(f)
-        return [EnemyGroup(desc, map) for desc in data]
+        return [EnemyGroup(desc, map, mixer) for desc in data]
 
 class EnemyGroup(InstructionGroup):
-    def __init__(self, description, map):
+    def __init__(self, description, map, mixer):
         super(EnemyGroup, self).__init__()
+        self.mixer = mixer
         enemy_descs = description["enemies"]
         self.melody = description["melody"]
         self.melody_progress = 0 # how many correct notes in a row
@@ -30,6 +32,12 @@ class EnemyGroup(InstructionGroup):
         return self.melody_progress >= len(self.melody)
 
     def on_beat(self, map, music, movement):
+        # play desired note
+        note = NoteGenerator(self.melody[self.melody_index], .3)
+        env = Envelope(note, .1, 1, .3, 1)
+        self.mixer.add(env)
+
+        # check if player sang correct note (or if no note was required)
         if self.melody[self.melody_index] == 0 or (music.is_pitch() and
                         music.get_midi() == self.melody[self.melody_index]):
             # correct pitch

@@ -32,7 +32,7 @@ class Level(InstructionGroup):
         self.add(self.map)
 
         self.enemy_groups = enemy_groups_from_spec(WORLD + "/" + level_name + "/enemies.json",
-                                                    self.map)
+                                                    self.map, self.mixer)
         for eg in self.enemy_groups:
             self.add(eg)
 
