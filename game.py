@@ -28,6 +28,7 @@ class Level(InstructionGroup):
         self.movement_controller = movement_controller
 
         self.map = Map(WORLD + "/" + level_name + "/map.txt")
+        self.add(self.map)
         # TODO: actually load enemies
         self.enemy_groups = []
         self.player = Player(self.map.player_start_location())
@@ -62,7 +63,7 @@ class Level(InstructionGroup):
         print("beat off")
 
     def on_update(self):
-        pass
+        self.map.on_update(kivyClock.frametime)
 
 class Game(BaseWidget):
     def __init__(self):

@@ -1,26 +1,33 @@
-EMPTY = " "
-PLAYER_START = "p"
-EXIT = "e"
-WALL = "w"
+from kivy.graphics.instructions import InstructionGroup
+from kivy.graphics import Color, Ellipse, Line, Rectangle
+from kivy.graphics import PushMatrix, PopMatrix
+from kivy.core.window import Window
+import numpy as np
 
-VALID_TILES = [EMPTY, PLAYER_START, EXIT, WALL]
+from map_tile import MapTile, PLAYER_START
 
-class Map:
+VIEW_SPEED = 5
+TILE_SIZE = np.min(Window.size) / 11
+
+class Map(InstructionGroup):
     def __init__(self, map_filename):
-        with open(map_filename) as f:
-            self.tiles = f.read().strip().split("\n")
+        super(Map, self).__init__()
 
-        # validate map
-        length = len(self.tiles[0])
-        for r, row in enumerate(self.tiles):
-            assert(len(row) == length)
-            for i, c in enumerate(row):
-                assert(c in VALID_TILES)
-                if c == PLAYER_START:
-                    self.player_start_loc = (r, i)
-        # rename PLAYER_START to EMPTY since it is no longer useful
-        r, i = self.player_start_loc
-        self.tiles[r] = self.tiles[r][:i] + EMPTY + self.tiles[r][i+1:]
+        with open(map_filename) as f:
+            rows = f.read().strip().split("\n")
+        for r, row in enumerate(rows):
+            for c, kind in enumerate(row):
+                if kind == PLAYER_START:
+                    self.player_start_loc = (r, c)
+
+        self.view_center = np.array(self.player_start_loc)
+        self.view_goal = np.array(self.player_start_loc)
+
+        self.tiles = [[MapTile(r, c, kind, self) for c, kind in enumerate(row)]
+                        for r, row in enumerate(rows)]
+        for row in self.tiles:
+            for tile in row:
+                self.add(tile)
 
         # initialize per-timestep variables
         self.start_new_timestep()
@@ -40,6 +47,7 @@ class Map:
     def add_player(self, position, player):
         # TODO: maybe call player callback
         self.player_loc = tuple(position)
+        self.view_goal = np.array(self.player_loc)
 
     def is_square_passable(self, position):
         return self.tiles[position[0]][position[1]] != WALL
@@ -57,11 +65,25 @@ class Map:
     def map_size(self):
         return len(self.tiles), len(self.tiles[0])
 
-if __name__ == '__main__':
-    # tests for the map class
-    test = Map("data/test/map.txt")
-    try:
-        Map("data/test/badmap.txt")
-        raise Exception("badmap didn't fail map test")
-    except AssertionError:
-        print("assertions succeeded")
+    def tile_size(self):
+        return TILE_SIZE, TILE_SIZE
+
+    def tile_to_pixels(self, row, col):
+        tile_width, tile_height = self.tile_size()
+        return (Window.width / 2 + (col - self.view_center[1] - .5) * tile_width,
+                Window.height / 2 - (row - self.view_center[0] + .5) * tile_height)
+
+    def on_update(self, dt):
+        disp = self.view_goal - self.view_center
+        dist = np.linalg.norm(disp)
+        if dist <= dt * VIEW_SPEED:
+            # can move to goal this step
+            self.view_center = self.view_goal
+        else:
+            move = disp * dt * VIEW_SPEED / dist
+            self.view_center = self.view_center + move
+
+        # update all tiles
+        for row in self.tiles:
+            for tile in row:
+                tile.on_update()
