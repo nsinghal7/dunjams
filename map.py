@@ -12,10 +12,15 @@ class Map:
 
         # validate map
         length = len(self.tiles[0])
-        for row in self.tiles:
+        for r, row in enumerate(self.tiles):
             assert(len(row) == length)
-            for c in row:
+            for i, c in enumerate(row):
                 assert(c in VALID_TILES)
+                if c == PLAYER_START:
+                    self.player_start_loc = (r, i)
+        # rename PLAYER_START to EMPTY since it is no longer useful
+        r, i = self.player_start_loc
+        self.tiles[r] = self.tiles[r][:i] + EMPTY + self.tiles[r][i+1:]
 
         # initialize per-timestep variables
         self.start_new_timestep()
@@ -45,6 +50,12 @@ class Map:
 
     def player_location(self):
         return self.player_loc
+
+    def player_start_location(self):
+        return self.player_start_loc
+
+    def map_size(self):
+        return len(self.tiles), len(self.tiles[0])
 
 if __name__ == '__main__':
     # tests for the map class
