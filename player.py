@@ -18,9 +18,13 @@ class Player(Entity):
 
     def on_beat(self, map, music, movement):
         delta = movement.get_delta()
-        # TODO collision detection
-        self.position = (self.position[0] + delta[0], self.position[1] + delta[1])
-        self.graphic.set_position(self.position)
+
+        # collision detection
+        new_pos = (self.position[0] + delta[0], self.position[1] + delta[1])
+        if self.map.is_square_passable(new_pos):
+            self.position = new_pos
+            self.graphic.set_position(self.position)
+
         map.add_player(self.position, self)
 
 class PlayerGraphic(EntityGraphic):
@@ -34,7 +38,7 @@ class PlayerGraphic(EntityGraphic):
         self.color = Color(1, 1, 1)
         self.add(self.color)
 
-        self.rect = Rectangle(pos=map.tile_to_pixels(*position), size=map.tile_size())
+        self.rect = Rectangle(pos=map.tile_to_pixels(position), size=map.tile_size())
         self.add(self.rect)
 
     def set_position(self, position):
@@ -52,4 +56,4 @@ class PlayerGraphic(EntityGraphic):
             delta = disp * dt * PLAYER_SPEED / dist
             self.position = self.position + delta
 
-        self.rect.pos = self.map.tile_to_pixels(*self.position)
+        self.rect.pos = self.map.tile_to_pixels(self.position)
