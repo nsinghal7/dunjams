@@ -7,13 +7,14 @@ from common.clock import SimpleTempoMap, AudioScheduler, kTicksPerQuarter, quant
 
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
-from kivy.graphics import PushMatrix, PopMatrix, Translate
+from kivy.graphics import PushMatrix, PopMatrix
 from kivy.clock import Clock as kivyClock
 
 from map import Map
 from music_controller import MusicController
 from movement_controller import MovementController
 from player import Player
+from enemy_group import EnemyGroup
 
 WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 60
@@ -30,7 +31,9 @@ class Level(InstructionGroup):
         self.map = Map(WORLD + "/" + level_name + "/map.txt")
         self.add(self.map)
         # TODO: actually load enemies
-        self.enemy_groups = []
+        self.enemy_groups = [EnemyGroup({"enemies": [{"motions": [], "attacks": [], "init_pos": [2, 2]}], "melody": [60, 60, 60, 60, 60, 60, 60, 61]}, self.map)]
+        for eg in self.enemy_groups:
+            self.add(eg)
         self.player = Player(self.map.player_start_location())
 
         now = self.sched.get_tick()
@@ -64,6 +67,8 @@ class Level(InstructionGroup):
 
     def on_update(self):
         self.map.on_update(kivyClock.frametime)
+        for eg in self.enemy_groups:
+            eg.on_update()
 
 class Game(BaseWidget):
     def __init__(self):

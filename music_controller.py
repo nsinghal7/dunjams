@@ -9,7 +9,15 @@ class MusicController:
         pass
 
     def get_music(self):
-        return Music()
+        return Pitch()
 
 class Music:
-    pass
+    def is_pitch(self):
+        pass
+
+class Pitch(Music):
+    def is_pitch(self):
+        return True
+
+    def get_midi(self):
+        return 60
