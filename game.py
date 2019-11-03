@@ -13,6 +13,7 @@ from kivy.clock import Clock as kivyClock
 from map import Map
 from music_controller import MusicController
 from movement_controller import MovementController
+from player import Player
 
 WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 60
@@ -50,11 +51,14 @@ class Game(BaseWidget):
 
     def load_level(self):
         # for now this only involves loading the map and creating the player and enemies
-        # TODO load player and enemies
+        # TODO enemies
         self.map = Map(WORLD + "/" + self.level_names[self.level_index] + "/map.txt")
         print(self.map.player_start_location())
-        now = self.sched.get_tick()
 
+        self.enemy_groups = []
+        self.player = Player(self.map.player_start_location())
+
+        now = self.sched.get_tick()
         next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
         next_pre_beat = next_beat - EPSILON_BEFORE_TICKS
 
@@ -69,6 +73,18 @@ class Game(BaseWidget):
 
     def beat_off(self, tick, _):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
+        self.music_controller.beat_off()
+        music_input = self.music_controller.get_music()
+        self.movement_controller.beat_off()
+        movement = self.movement_controller.get_movement()
+
+        for eg in self.enemy_groups:
+            eg.on_beat(self.map, music_input, movement)
+
+        self.player.on_beat(self.map, music_input, movement)
+
+        # TODO: handle things like game over
+
         print("beat off")
 
 
