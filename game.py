@@ -17,8 +17,8 @@ from player import Player
 from enemy_group import EnemyGroup, enemy_groups_from_spec
 
 WORLD = "data/basic_world"
-EPSILON_BEFORE_TICKS = 60
-EPSILON_AFTER_TICKS = 20
+EPSILON_BEFORE_TICKS = 80
+EPSILON_AFTER_TICKS = 30
 
 class Level(InstructionGroup):
     def __init__(self, level_name, mixer, sched, music_controller, movement_controller):
@@ -101,6 +101,9 @@ class Game(BaseWidget):
         self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
                             self.music_controller, self.movement_controller)
         self.canvas.add(self.level)
+
+    def on_key_down(self, keycode, modifiers):
+        self.movement_controller.on_key_down(keycode, modifiers)
 
 
     def on_update(self):
