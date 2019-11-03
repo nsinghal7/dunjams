@@ -14,7 +14,7 @@ from map import Map
 from music_controller import MusicController
 from movement_controller import MovementController
 from player import Player
-from enemy_group import EnemyGroup
+from enemy_group import EnemyGroup, enemy_groups_from_spec
 
 WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 60
@@ -30,11 +30,14 @@ class Level(InstructionGroup):
 
         self.map = Map(WORLD + "/" + level_name + "/map.txt")
         self.add(self.map)
-        # TODO: actually load enemies
-        self.enemy_groups = [EnemyGroup({"enemies": [{"motions": [], "attacks": [], "init_pos": [2, 2]}], "melody": [60, 60, 60, 60, 60, 60, 60, 61]}, self.map)]
+
+        self.enemy_groups = enemy_groups_from_spec(WORLD + "/" + level_name + "/enemies.json",
+                                                    self.map)
         for eg in self.enemy_groups:
             self.add(eg)
+
         self.player = Player(self.map.player_start_location())
+        self.add(self.player)
 
         now = self.sched.get_tick()
         next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
@@ -66,9 +69,10 @@ class Level(InstructionGroup):
         print("beat off")
 
     def on_update(self):
-        self.map.on_update(kivyClock.frametime)
+        self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST
         for eg in self.enemy_groups:
             eg.on_update()
+        self.player.on_update()
 
 class Game(BaseWidget):
     def __init__(self):

@@ -1,3 +1,5 @@
+import json
+
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
@@ -5,6 +7,11 @@ from kivy.graphics import PushMatrix, PopMatrix
 from common.gfxutil import AnimGroup
 
 from enemy import Enemy
+
+def enemy_groups_from_spec(filename, map):
+    with open(filename) as f:
+        data = json.load(f)
+        return [EnemyGroup(desc, map) for desc in data]
 
 class EnemyGroup(InstructionGroup):
     def __init__(self, description, map):
