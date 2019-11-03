@@ -9,8 +9,10 @@ from map_tile import MapTile, PLAYER_START
 VIEW_SPEED = 5
 
 class Map(InstructionGroup):
-    def __init__(self, map_filename):
+    def __init__(self, map_filename, width_ratio, height_ratio):
         super(Map, self).__init__()
+        self.width_ratio = width_ratio
+        self.height_ratio = height_ratio
 
         with open(map_filename) as f:
             rows = f.read().strip().split("\n")
@@ -74,8 +76,8 @@ class Map(InstructionGroup):
     def tile_to_pixels(self, position):
         row, col = position
         tile_width, tile_height = self.tile_size()
-        return (Window.width / 2 + (col - self.view_center[1] - .5) * tile_width,
-                Window.height / 2 - (row - self.view_center[0] + .5) * tile_height)
+        return (Window.width * self.width_ratio / 2 + (col - self.view_center[1] - .5) * tile_width,
+                Window.height * (1 - self.height_ratio / 2) - (row - self.view_center[0] + .5) * tile_height)
 
     def on_update(self, dt):
         disp = self.view_goal - self.view_center
