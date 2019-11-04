@@ -16,7 +16,7 @@ class Music:
     def __init__(self):
     	self.events = []
 
-    def add_event(self, event)
+    def add_event(self, event):
     	self.events.append(event)
 
     def is_pitch(self):
@@ -33,7 +33,7 @@ class Pitch(Music):
 
 	def add_pitch(self, t, midi):
 		if len(self.events) and midi == self.events[-1][0]:
-			continue
+			return
 		self.add_event(PitchEvent(t, midi))
 
 class PitchEvent(MusicEvent):

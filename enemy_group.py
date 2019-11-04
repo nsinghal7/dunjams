@@ -39,6 +39,7 @@ class EnemyGroup(InstructionGroup):
 
     def on_beat(self, map, music, movement):
         # check if player sang correct note (or if no note was required)
+        # TODO: check if player doesn't sing a note when none is required
         if self.melody[self.melody_index] == 0 or (music.is_pitch() and
                         music.get_midi() == self.melody[self.melody_index]):
             # correct pitch

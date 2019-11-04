@@ -65,7 +65,7 @@ class FIFOBuffer(object):
         return out
 
 
-# keeps track of most recent N samples. 
+# keeps track of most recent N samples.
 class BufferFilter(object):
     def __init__(self, size):
         super(BufferFilter, self).__init__()
@@ -97,7 +97,7 @@ class PitchDetector(object):
 
         self.cur_pitch = 0
 
-    # Add incoming data to pitch detector. Return estimated pitch as floating point 
+    # Add incoming data to pitch detector. Return estimated pitch as floating point
     # midi value.
     # Returns 0 if a strong pitch is not found.
     def write(self, signal):
@@ -120,7 +120,7 @@ class PitchDetector(object):
         return pitch, conf
 
 
-# looks at incoming audio data, detects onsets, and then a little later, classifies the onset as 
+# looks at incoming audio data, detects onsets, and then a little later, classifies the onset as
 # "kick" or "snare"
 # calls callback function with message argument that is one of "onset", "kick", "snare"
 class OnsetDectior(object):
@@ -185,7 +185,7 @@ class OnsetDectior(object):
 class MeterDisplay(InstructionGroup):
     def __init__(self, pos, height, in_range, color):
         super(MeterDisplay, self).__init__()
-        
+
         self.max_height = height
         self.range = in_range
 
@@ -226,7 +226,7 @@ class OnsetDisplay(InstructionGroup):
 
         self.add(PushMatrix())
         self.add(Translate(*pos))
-        self.add(self.color)        
+        self.add(self.color)
         self.add(self.circle)
         self.add(PopMatrix())
 
@@ -331,7 +331,7 @@ class MainWidget(BaseWidget) :
         # display on meter and graph
         rms = np.sqrt(np.mean(frames ** 2))
         rms = np.clip(rms, 1e-10, 1) # don't want log(0)
-        db = 20 * np.log10(rms)      # convert from amplitude to decibels 
+        db = 20 * np.log10(rms)      # convert from amplitude to decibels
         self.mic_meter.set(db)
         self.mic_graph.add_point(db)
 
