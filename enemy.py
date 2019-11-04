@@ -22,7 +22,7 @@ class Enemy(Entity):
         self.actions = action_description
 
         pixel_pos = self.map.tile_to_pixels(self.pos)
-        self.graphic = CRectangle(cpos=pixel_pos, size=map.tile_size(), color=(0,1,0))
+        self.graphic = Rectangle(pos=pixel_pos, size=map.tile_size(), color=(0,1,0))
         self.add(self.graphic)
         self.projectiles = []
 
@@ -30,13 +30,14 @@ class Enemy(Entity):
     def on_beat(self, map, music, movement):
         # move the enemy
         self.pos = self.actions.get_next_pos(self.pos)
-        self.graphic.set_cpos(self.map.tile_to_pixels(self.pos))
+        self.graphic.pos = self.map.tile_to_pixels(self.pos)
 
         # make the next projectile
         next_attack = self.actions.get_next_attack()
         if next_attack != '':
             p_pos = np.array(self.pos)
             self.projectiles.append(Projectile(p_pos, next_attack, self.map))
+            self.add(self.projectiles[-1])
 
         # TODO: get rid of projectiles that have gone off the edge of the screen
 
@@ -68,11 +69,13 @@ class Projectile(Entity):
         self.dir = dir
         self.map = map
         pixel_pos = self.map.tile_to_pixels(self.pos)
-        self.rect = CRectangle(cpos=pixel_pos, size=map.tile_size())
+        self.rect = Rectangle(pos=pixel_pos, size=np.array(map.tile_size())*0.5, color=(1,0.8,0.8))
+        self.add(self.rect)
 
     def get_next_pos(self):
         self.pos += direction_map[self.dir]
-        self.rect.set_cpos(self.map.tile_to_pixels(self.pos))
+        self.rect.pos = self.map.tile_to_pixels(self.pos)
+        print('getting the next position of a projectile')
         return self.pos
 
     def on_update():
