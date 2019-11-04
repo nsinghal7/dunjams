@@ -22,6 +22,9 @@ class Enemy(Entity):
         self.actions = action_description
 
         pixel_pos = self.map.tile_to_pixels(self.pos)
+
+        # TODO: change this! self.graphic should have an on_update(), and Rectangle doesn't.
+        # Because of this, self.on_update() doesn't call super's on_update()
         self.graphic = Rectangle(pos=pixel_pos, size=map.tile_size(), color=(0,1,0))
         self.add(self.graphic)
         self.projectiles = []
@@ -48,9 +51,11 @@ class Enemy(Entity):
         for p in self.projectiles:
             map.add_enemy(p.get_next_pos(), p)
 
-    # use superclass's on_update
-    def on_update(self, dt):
-        pass
+    def on_update(self, dt=None):
+        # TODO: cannot call super's on_update because self.graphic doesn't have an on_update()
+        self.graphic.pos = self.map.tile_to_pixels(self.pos)
+        for p in self.projectiles:
+            p.on_update()
 
 
 direction_map = {
@@ -79,8 +84,8 @@ class Projectile(Entity):
         print(self.dir)
         return self.pos
 
-    def on_update():
-        pass
+    def on_update(self):
+        self.rect.pos = self.map.tile_to_pixels(self.pos) + np.array(self.map.tile_size()) / 4
 
 
 
