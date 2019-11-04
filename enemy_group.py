@@ -52,7 +52,7 @@ class EnemyGroup(InstructionGroup):
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
 
-    def on_update(self):
+    def on_update(self, dt):
         self.enemies.on_update()
 
 class EnemyActionDescription:
