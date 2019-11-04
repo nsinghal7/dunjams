@@ -54,10 +54,10 @@ class Enemy(Entity):
 
 
 direction_map = {
-    'u': (0, 1),
-    'd': (0, -1),
-    'l': (-1, 0),
-    'r': (1, 0)
+    'u': (-1, 0),
+    'd': (1, 0),
+    'l': (0, -1),
+    'r': (0, 1)
 }
 
 # The class that keeps track of projectiles and their positions, and moves them
@@ -75,7 +75,7 @@ class Projectile(Entity):
     def get_next_pos(self):
         self.pos += direction_map[self.dir]
         self.rect.pos = self.map.tile_to_pixels(self.pos)
-        print('getting the next position of a projectile')
+        print(self.dir)
         return self.pos
 
     def on_update():
