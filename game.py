@@ -97,7 +97,7 @@ class Game(BaseWidget):
         super(Game, self).__init__()
 
         # audio setup
-        self.audio = Audio(2)#, input_func=self.receive_audio, num_input_channels = 1)
+        self.audio = Audio(2, input_func=self.receive_audio, num_input_channels = 1)
         self.mixer = Mixer()
         self.tempo_map = SimpleTempoMap(120)
         self.sched = AudioScheduler(self.tempo_map)

@@ -13,6 +13,7 @@ class MusicController(object):
 
     def get_music(self):
         music = self.music
+        print(str(music))
         self.music = Music()
         return music
 
@@ -26,10 +27,16 @@ class Music:
     def is_pitch(self):
         pass
 
+    def __str__(self):
+        return str([str(event) for event in self.events])
+
 class MusicEvent:
     def __init__(self, beat, value):
         self.beat = beat
         self.value = value
+
+    def __str__(self):
+        return str((self.beat, self.value))
 
 class Pitch(Music):
     def is_pitch(self):
