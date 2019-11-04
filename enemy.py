@@ -69,12 +69,13 @@ class Projectile(Entity):
         self.dir = dir
         self.map = map
         pixel_pos = self.map.tile_to_pixels(self.pos)
-        self.rect = Rectangle(pos=pixel_pos, size=np.array(map.tile_size())*0.5, color=(1,0.8,0.8))
+        pixel_size = np.array(map.tile_size())*0.5
+        self.rect = Rectangle(pos=pixel_pos + pixel_size / 2, size=pixel_size, color=(1,0.8,0.8))
         self.add(self.rect)
 
     def get_next_pos(self):
         self.pos += direction_map[self.dir]
-        self.rect.pos = self.map.tile_to_pixels(self.pos)
+        self.rect.pos = self.map.tile_to_pixels(self.pos) + np.array(self.map.tile_size()) / 4
         print(self.dir)
         return self.pos
 
