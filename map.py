@@ -7,11 +7,12 @@ import numpy as np
 from map_tile import MapTile, PLAYER_START
 
 VIEW_SPEED = 5
-TILE_SIZE = np.min(Window.size) / 11
 
 class Map(InstructionGroup):
-    def __init__(self, map_filename):
+    def __init__(self, map_filename, width_ratio, height_ratio):
         super(Map, self).__init__()
+        self.width_ratio = width_ratio
+        self.height_ratio = height_ratio
 
         with open(map_filename) as f:
             rows = f.read().strip().split("\n")
@@ -50,7 +51,10 @@ class Map(InstructionGroup):
         self.view_goal = np.array(self.player_loc)
 
     def is_square_passable(self, position):
-        return self.tiles[position[0]][position[1]] != WALL
+        if 0 <= position[0] < len(self.tiles) and 0 <= position[1] < len(self.tiles[0]):
+            return self.tiles[position[0]][position[1]].is_passable()
+        else:
+            return False # outside of map isn't passable
 
     def is_square_dangerous(self, position):
         enemies = self.enemy_map[tuple(position)]
@@ -66,12 +70,14 @@ class Map(InstructionGroup):
         return len(self.tiles), len(self.tiles[0])
 
     def tile_size(self):
-        return TILE_SIZE, TILE_SIZE
+        size = np.min(Window.size) / 11
+        return size, size
 
-    def tile_to_pixels(self, row, col):
+    def tile_to_pixels(self, position):
+        row, col = position
         tile_width, tile_height = self.tile_size()
-        return (Window.width / 2 + (col - self.view_center[1] - .5) * tile_width,
-                Window.height / 2 - (row - self.view_center[0] + .5) * tile_height)
+        return (Window.width * self.width_ratio / 2 + (col - self.view_center[1] - .5) * tile_width,
+                Window.height * (1 - self.height_ratio / 2) - (row - self.view_center[0] + .5) * tile_height)
 
     def on_update(self, dt):
         disp = self.view_goal - self.view_center

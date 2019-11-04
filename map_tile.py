@@ -15,8 +15,7 @@ class MapTile(InstructionGroup):
         super(MapTile, self).__init__()
         if kind == PLAYER_START:
             kind = EMPTY # replace since player start doesn't matter
-        self.row = row
-        self.col = col
+        self.position = (row, col)
         self.kind = kind
         self.map = map
 
@@ -30,10 +29,14 @@ class MapTile(InstructionGroup):
             raise Exception("Cannot draw tile with name: %s" % kind)
 
         self.add(self.color)
-        location = self.map.tile_to_pixels(row, col)
+        location = self.map.tile_to_pixels(self.position)
         self.rect = Rectangle(pos=location, size=self.map.tile_size())
         self.add(self.rect)
 
+    def is_passable(self):
+        return self.kind != WALL
+
     def on_update(self):
-        location = self.map.tile_to_pixels(self.row, self.col)
+        location = self.map.tile_to_pixels(self.position)
         self.rect.pos = location
+        self.rect.size = self.map.tile_size()
