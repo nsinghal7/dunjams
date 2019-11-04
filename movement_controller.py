@@ -3,23 +3,23 @@ from common.core import lookup
 class MovementController:
     def __init__(self):
         self.movement = None
+        self.onbeat = False
 
     def beat_on(self):
-        self.movement = None
+        self.onbeat = True
 
     def beat_off(self):
-        pass
-
-    def on_key_down(self, keycode, modifiers):
-        if keycode[1] in ["up", "down", "right", "left"]:
-            self.movement = keycode[1][0]
+        self.onbeat = False
 
     def get_movement(self):
-        return Movement(self.movement)
+        movement = self.movement
+        self.movement = None
+        return movement
 
 class Movement:
-    def __init__(self, direction):
+    def __init__(self, direction, onbeat):
         self.direction = direction
+        self.onbeat = onbeat
 
     def get_delta(self):
         if self.direction == "u":
@@ -34,3 +34,6 @@ class Movement:
             return (0, 0)
         else:
             raise Exception("unknown direction")
+
+    def is_on_beat(self):
+    	return self.onbeat

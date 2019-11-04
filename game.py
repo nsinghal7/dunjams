@@ -79,7 +79,7 @@ class Game(BaseWidget):
         super(Game, self).__init__()
 
         # audio setup
-        self.audio = Audio(2)
+        self.audio = Audio(2, input_func=self.receive_audio, num_input_channels = 1)
         self.mixer = Mixer()
         self.tempo_map = SimpleTempoMap(120)
         self.sched = AudioScheduler(self.tempo_map)
@@ -102,13 +102,15 @@ class Game(BaseWidget):
                             self.music_controller, self.movement_controller)
         self.canvas.add(self.level)
 
-    def on_key_down(self, keycode, modifiers):
-        self.movement_controller.on_key_down(keycode, modifiers)
-
-
     def on_update(self):
         self.level.on_update()
         self.audio.on_update()
+
+    def receive_audio(self, frames, num_channels):
+        self.music_controller.receive_audio()
+
+    def on_key_down(self, keycode, modifiers):
+        self.movement_controller.on_key_down(keycode, modifiers)
 
 if __name__ == '__main__':
     run(Game)
