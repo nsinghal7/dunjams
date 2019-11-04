@@ -11,8 +11,8 @@ from kivy.graphics import PushMatrix, PopMatrix
 from kivy.clock import Clock as kivyClock
 
 from map import Map
-from music_controller import MusicController
-from movement_controller import MovementController
+from voice_controller import VoiceController
+from keyboard_controller import KeyboardController
 from player import Player
 from enemy_group import EnemyGroup, enemy_groups_from_spec
 from beat_bar import BeatBar
@@ -106,8 +106,8 @@ class Game(BaseWidget):
         self.audio.set_generator(self.sched)
         self.sched.set_generator(self.mixer)
 
-        self.music_controller = MusicController()
-        self.movement_controller = MovementController()
+        self.music_controller = VoiceController()
+        self.movement_controller = KeyboardController()
 
 
         # load game
@@ -127,7 +127,7 @@ class Game(BaseWidget):
         self.audio.on_update()
 
     def receive_audio(self, frames, num_channels):
-        self.music_controller.receive_audio()
+        self.music_controller.receive_audio(frames, num_channels)
 
     def on_key_down(self, keycode, modifiers):
         self.movement_controller.on_key_down(keycode, modifiers)

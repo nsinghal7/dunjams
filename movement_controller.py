@@ -1,9 +1,9 @@
 from common.core import lookup
 from time import time
 
-class MovementController:
+class MovementController(object):
     def __init__(self):
-        self.movement = None
+        self.movement = Movement()
         self.onbeat = False
 
     def beat_on(self):
@@ -14,11 +14,11 @@ class MovementController:
 
     def get_movement(self):
         movement = self.movement
-        self.movement = None
+        self.movement = Movement()
         return movement
 
 class Movement:
-    def __init__(self, direction, onbeat):
+    def __init__(self, direction=None, onbeat=False):
         self.direction = direction
         self.onbeat = onbeat
 
