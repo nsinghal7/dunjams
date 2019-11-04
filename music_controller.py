@@ -1,4 +1,6 @@
-class MusicController:
+PITCH_SUSTAIN_THRESHOLD = 5
+
+class MusicController(object):
     def __init__(self):
         self.music = Music()
         self.onbeat = False
@@ -10,7 +12,9 @@ class MusicController:
         self.onbeat = False
 
     def get_music(self):
-        return self.music
+		music = self.music
+		self.music = Music()
+		return music
 
 class Music:
     def __init__(self):
@@ -32,8 +36,11 @@ class Pitch(Music):
 		return True
 
 	def add_pitch(self, t, midi):
-		if len(self.events) and midi == self.events[-1][0]:
-			return
+		if len(self.events):
+			if midi == self.events[-1].value:
+				return
+			if t - self.events[-1].beat < PITCH_SUSTAIN_THRESHOLD:
+				self.events.pop()
 		self.add_event(PitchEvent(t, midi))
 
 class PitchEvent(MusicEvent):

@@ -1,21 +1,13 @@
-class VoiceController(PitchController):
+from music_controller import MusicController, PitchEvent
+from input_demo import PitchDetector
+
+class VoiceController(MusicController):
     def __init__(self):
         super(VoiceController, self).__init__()
 
-        self.pitch = PitchDetector()
+        #self.pitch_detector = PitchDetector()
 
     def receive_audio(self, frames, num_channels):
         assert(num_channels == 1)
 
-        self.cur_pitch = self.pitch.write(frames)
-
-    def on_key_down(self, keycode, modifiers):
-        key = keycode[1]
-        if key == 'w':
-            self.movement = Movement(0, 1, self.onbeat)
-        elif key == 'a':
-            self.movement = Movement(-1, 0, self.onbeat)
-        elif key == 's':
-            self.movement = Movement(0, -1, self.onbeat)
-        elif key == 'd':
-            self.movement = Movement(1, 0, self.onbeat)
+        self.music.add_event(PitchEvent(self.pitch_detector.write(frames), frames[0]))

@@ -337,8 +337,6 @@ class MainWidget(BaseWidget) :
 
         # pitch detection: get pitch and display on meter and graph
         self.cur_pitch = self.pitch.write(frames)
-        print(self.cur_pitch)
-        sys.stdout.flush()
         self.pitch_meter.set(self.cur_pitch)
         self.pitch_graph.add_point(self.cur_pitch)
 
@@ -360,4 +358,5 @@ class MainWidget(BaseWidget) :
         if t is not None:
             self.onset_detector.onset_thresh += t
 
-run(MainWidget)
+if __name__ == '__main__':
+    run(MainWidget)

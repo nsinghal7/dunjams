@@ -12,7 +12,7 @@ class Entity(InstructionGroup):
     def on_beat(self, map, music, movement):
         pass
 
-    def on_update(self):
+    def on_update(self, dt=None):
         self.graphic.on_update()
 
 class EntityGraphic(InstructionGroup):

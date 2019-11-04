@@ -42,7 +42,7 @@ class Enemy(Entity):
         map.add_enemy(self.pos, self)
 
         for p in self.projectiles:
-            map.add_enemy()
+            map.add_enemy(p.pos, p)
 
     # use superclass's on_update
     # def on_update(self, dt):
@@ -57,7 +57,7 @@ direction_map = {
 }
 
 # The class that keeps track of projectiles and their positions, and moves them
-class Projectile:
+class Projectile(Entity):
     def __init__(self, init_pos, dir):
         super(Projectile, self).__init__()
         self.pos = np.array(init_pos)
