@@ -29,7 +29,7 @@ class EnemyGroup(InstructionGroup):
         self.enemies = AnimGroup()
         self.add(self.enemies)
         for desc in enemy_descs:
-            self.enemies.add(Enemy(desc["id"], desc["init_pos"], desc["note"], EnemyActionDescription(desc, self), map))
+            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map))
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):
@@ -71,7 +71,7 @@ class EnemyGroup(InstructionGroup):
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
 
-    def on_update(self, dt):
+    def on_update(self, dt=None):
         self.enemies.on_update()
 
 class EnemyActionDescription:
@@ -98,6 +98,6 @@ class EnemyActionDescription:
     def get_next_attack(self):
         attack = self.attacks[self.attack_index]
         self.attack_index = (self.attack_index + 1) % len(self.attacks)
-        if self.id not in self.enemy_group.get_pacified_enemies():
+        if self.id in self.enemy_group.get_pacified_enemies():
             return ""
         return attack
