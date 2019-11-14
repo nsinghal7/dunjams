@@ -7,7 +7,7 @@ from common.gfxutil import CRectangle
 import numpy as np
 
 class Enemy(Entity):
-    def __init__(self, init_pos, action_description, map):
+    def __init__(self, id, init_pos, note, action_description, map):
         super(Enemy, self).__init__()
         # TODO
         # init_pos is (row, col)
@@ -17,7 +17,9 @@ class Enemy(Entity):
         #    or to indicate not to shoot.
         # map is a Map object that should be used to convert from tiles (row, col) to pixels (x, y)
         #   using the tile_to_pixels() function
+        self.id = id
         self.pos = init_pos
+        self.note = note # the note is either the MIDI pitch which pacifies it, or -1 if the enemy group type is "all"
         self.map = map
         self.actions = action_description
 
@@ -42,14 +44,23 @@ class Enemy(Entity):
             self.projectiles.append(Projectile(p_pos, next_attack, self.map))
             self.add(self.projectiles[-1])
 
-        # TODO: get rid of projectiles that have gone off the edge of the screen
 
         # add them to the map so it knows where they are
         # using its add_enemy(self, position, enemy):
         map.add_enemy(self.pos, self)
 
+        p_kill_list = []
         for p in self.projectiles:
-            map.add_enemy(p.get_next_pos(), p)
+            next_pos = p.get_next_pos()
+            # get rid of projectiles that have gone off the edge of the screen
+            if next_pos[0] < 0 or next_pos[1] < 0 or next_pos[1] > map.map_size()[0] or next_pos[0] > map.map_size()[1]:
+                p_kill_list.append(p)
+            # otherwise, add them
+            else:
+                map.add_enemy(p.get_next_pos(), p)
+
+        for p in p_kill_list:
+            self.projectiles.remove(p)
 
     def on_update(self, dt=None):
         # TODO: cannot call super's on_update because self.graphic doesn't have an on_update()

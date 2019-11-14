@@ -20,16 +20,30 @@ class EnemyGroup(InstructionGroup):
         self.mixer = mixer
         enemy_descs = description["enemies"]
         self.melody = description["melody"]
-        self.melody_progress = 0 # how many correct notes in a row
+        self.type = description["pacify"] # this will be either 'individual' or 'all'
+        self.melody_progress = 0 # how many correct notes in a row, used for pacifying all of them
         self.melody_index = 0 # index of next note to expect/play
+
+        self.cur_pitch = None
 
         self.enemies = AnimGroup()
         self.add(self.enemies)
         for desc in enemy_descs:
-            self.enemies.add(Enemy(desc["init_pos"], EnemyActionDescription(desc, self), map))
+            self.enemies.add(Enemy(desc["id"], desc["init_pos"], desc["note"], EnemyActionDescription(desc, self), map))
 
-    def is_pacified(self):
-        return self.melody_progress >= len(self.melody)
+    # return a list of the IDs of pacified enemies
+    def get_pacified_enemies(self):
+        # if all the enemies have to be pacified at once
+        if self.type == "all":
+            if self.melody_progress >= len(self.melody):
+                # return all the IDs if the melody has been completed
+                return range(len(self.enemies.objects))
+            else:
+                # return an empty list otherwise
+                return []
+        # otherwise return a list of enemies whose pacifying note is the current note
+        else:
+            return [e.id for e in filter(lambda e: e.note == self.cur_pitch, self.enemies.objects)]
 
     def on_beat_exact(self):
         # play melody exactly on the beat so it doesn't sound weird
@@ -40,6 +54,7 @@ class EnemyGroup(InstructionGroup):
     def on_beat(self, map, music, movement):
         # check if player sang correct note (or if no note was required)
         # TODO: check if player doesn't sing a note when none is required
+        # Increment the melody progress for all or nothing groups
         if self.melody[self.melody_index] == 0 or (music.is_pitch() and
                         music.get_midi() == self.melody[self.melody_index]):
             # correct pitch
@@ -48,6 +63,10 @@ class EnemyGroup(InstructionGroup):
             # messed up! immediately reset progress
             self.melody_progress = 0
         self.melody_index = (self.melody_index + 1) % len(self.melody)
+
+        # Set the current pitch for the group
+        if music.is_pitch():
+            self.cur_pitch = music.get_midi()
 
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
@@ -59,6 +78,7 @@ class EnemyActionDescription:
     def __init__(self, description, enemy_group):
         self.motions = description["motions"]
         self.attacks = description["attacks"]
+        self.id = description["id"]
         self.enemy_group = enemy_group
 
         if len(self.motions) == 0:
@@ -78,6 +98,6 @@ class EnemyActionDescription:
     def get_next_attack(self):
         attack = self.attacks[self.attack_index]
         self.attack_index = (self.attack_index + 1) % len(self.attacks)
-        if self.enemy_group.is_pacified():
+        if self.id not in self.enemy_group.get_pacified_enemies():
             return ""
         return attack
