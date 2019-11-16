@@ -1,8 +1,13 @@
 [{
     "enemies": [
-        {"init_pos": [2, 2],
-        "motions": [[0, 1], [0, -1]],
-        "attacks": ["u", ""]}],
+        {
+          "init_pos": [2, 2],
+          "motions": [[0, 1], [0, -1]],
+          "attacks": ["u", ""],
+          "note": -1,
+          "sprite": "./data/sprites/crappy_enemy.PNG"
+        }
+      ],
     "melody": [60, 60, 60, 61],
     "pacify": "all"
 }]

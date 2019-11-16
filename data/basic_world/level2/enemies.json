@@ -5,28 +5,32 @@
           "init_pos": [1, 2],
           "motions": [[0, 0]],
           "attacks": ["d"],
-          "note": 60
+          "note": 60,
+          "sprite": "./data/sprites/crappy_enemy.PNG"
         },
         {
           "id": 1,
           "init_pos": [1, 3],
           "motions": [[0, 0]],
           "attacks": ["d"],
-          "note": 62
+          "note": 62,
+          "sprite": "./data/sprites/crappy_enemy.PNG"
         },
         {
           "id": 2,
           "init_pos": [1, 4],
           "motions": [[0, 0]],
           "attacks": ["d"],
-          "note": 64
+          "note": 64,
+          "sprite": "./data/sprites/crappy_enemy.PNG"
         },
         {
           "id": 3,
           "init_pos": [1, 5],
           "motions": [[0, 0]],
           "attacks": ["d"],
-          "note": 62
+          "note": 62,
+          "sprite": "./data/sprites/crappy_enemy.PNG"
         }
       ],
     "melody": [60, 62, 64, 62],

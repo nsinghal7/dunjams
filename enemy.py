@@ -8,7 +8,7 @@ from common.gfxutil import CRectangle, AnimGroup
 import numpy as np
 
 
-PROJECTILE_SPEED = 7
+PROJECTILE_SPEED = 10
 ENEMY_SPEED = 10
 
 class Enemy(Entity):
@@ -32,7 +32,7 @@ class Enemy(Entity):
 
         # TODO: change this! self.graphic should have an on_update(), and Rectangle doesn't.
         # Because of this, self.on_update() doesn't call super's on_update()
-        self.graphic = EnemyGraphic(self.pos, map)
+        self.graphic = EnemyGraphic(self.pos, desc["sprite"], map)
         self.draw_graphics()
         self.projectiles = AnimGroup()
 
@@ -48,6 +48,7 @@ class Enemy(Entity):
         if next_attack != '':
             p_pos = np.array(self.pos)
             self.projectiles.add(Projectile(p_pos, next_attack, self.map))
+            # self.graphic.add(Projectile(p_pos, next_attack, self.map))
             # self.add(self.projectiles[-1])
 
 
@@ -55,8 +56,8 @@ class Enemy(Entity):
         # using its add_enemy(self, position, enemy):
         map.add_enemy(self.pos, self)
 
-        p_kill_list = []
-        print(self.projectiles.objects)
+        # p_kill_list = []
+        # print(self.graphic.objects)
         for p in self.projectiles.objects:
             # update the position of the projectile
             next_pos = p.get_next_pos()
@@ -80,56 +81,9 @@ class Enemy(Entity):
         self.projectiles.on_update()
 
 
-direction_map = {
-    'u': (-1, 0),
-    'd': (1, 0),
-    'l': (0, -1),
-    'r': (0, 1)
-}
-
-# The class that keeps track of projectiles and their positions, and moves them
-class Projectile(Entity):
-    def __init__(self, init_pos, dir, map):
-        super(Projectile, self).__init__()
-        self.pos = np.array(init_pos)
-        self.next_pos = self.pos
-        # the direction is "u", "d", "l", or "r"
-        self.dir = dir
-        self.map = map
-        pixel_pos = self.map.tile_to_pixels(self.pos)
-        pixel_size = np.array(map.tile_size())*0.5
-
-        self.add(Color(1,0.8,0.8))
-        self.rect = Rectangle(pos=pixel_pos + pixel_size / 2, size=pixel_size, color=(1,0.8,0.8))
-        self.add(self.rect)
-
-    # updates position and returns the new one
-    def get_next_pos(self):
-        self.next_pos = self.pos + direction_map[self.dir]
-        self.rect.pos = self.map.tile_to_pixels(self.pos) + np.array(self.map.tile_size()) / 4
-        return self.next_pos
-
-    def on_update(self, dt):
-        # dt = kivyClock.frametime
-
-        disp = self.next_pos - self.pos
-        dist = np.linalg.norm(disp)
-
-        if dist < dt * PROJECTILE_SPEED:
-            self.pos = self.next_pos
-        else:
-            delta = disp * dt * PROJECTILE_SPEED / dist
-            self.pos = self.pos + delta
-
-        self.rect.pos = self.map.tile_to_pixels(self.pos) + np.array(self.map.tile_size()) / 4
-
-        return self.pos[0] > 0 and self.pos[1] > 0 and self.pos[1] > self.map.map_size()[0] and self.pos[0] > self.map.map_size()[1]
-
-
-
-
 class EnemyGraphic(EntityGraphic):
-    def __init__(self, init_pos, map):
+    def __init__(self, init_pos, sprite, map):
+        super(EnemyGraphic, self).__init__()
         self.pos = init_pos
         self.next_pos = self.pos
         self.map = map
@@ -156,3 +110,68 @@ class EnemyGraphic(EntityGraphic):
 
         # return self.pos[0] > 0 and self.pos[1] > 0 and self.pos[1] > self.map.map_size()[0] and self.pos[0] > self.map.map_size()[1]
         return True
+
+# map a direction character to a deltax and deltay
+direction_map = {
+    'u': (-1, 0),
+    'd': (1, 0),
+    'l': (0, -1),
+    'r': (0, 1)
+}
+
+# The class that keeps track of projectiles and their positions, and moves them
+class Projectile(Entity):
+    def __init__(self, init_pos, dir, map):
+        super(Projectile, self).__init__()
+        self.pos = np.array(init_pos)
+        self.next_pos = self.pos
+        # the direction is "u", "d", "l", or "r"
+        self.dir = dir
+        self.map = map
+
+        self.graphic = ProjectileGraphic(init_pos, map)
+        self.draw_graphics()
+
+
+    # updates position and returns the new one
+    def get_next_pos(self):
+        self.next_pos = self.pos + direction_map[self.dir]
+        # self.rect.pos = self.map.tile_to_pixels(self.pos) + np.array(self.map.tile_size()) / 4
+        self.graphic.set_next_pos(self.next_pos)
+        return self.next_pos
+
+
+
+class ProjectileGraphic(EntityGraphic):
+    def __init__(self, init_pos, map):
+        super(ProjectileGraphic, self).__init__()
+        self.pos = init_pos
+        self.next_pos = init_pos
+        self.map = map
+
+        pixel_pos = self.map.tile_to_pixels(self.pos)
+        pixel_size = np.array(map.tile_size())*0.5
+
+        self.add(Color(1,0.8,0.8))
+        self.rect = Rectangle(pos=pixel_pos + pixel_size / 2, size=pixel_size)
+        self.add(self.rect)
+
+    def set_next_pos(self, next_pos):
+        self.next_pos = next_pos
+
+    def on_update(self, dt=None):
+        dt = kivyClock.frametime
+
+        disp = self.next_pos - self.pos
+        dist = np.linalg.norm(disp)
+
+        if dist < dt * PROJECTILE_SPEED:
+            self.pos = self.next_pos
+        else:
+            delta = disp * dt * PROJECTILE_SPEED / dist
+            self.pos = self.pos + delta
+
+        self.rect.pos = self.map.tile_to_pixels(self.pos) + np.array(self.map.tile_size()) / 4
+
+        return self.pos[0] > 0 and self.pos[1] > 0 and self.pos[1] > self.map.map_size()[0] and self.pos[0] > self.map.map_size()[1]
+        # return True
