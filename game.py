@@ -89,7 +89,6 @@ class Level(InstructionGroup):
         self.pitch_bar.on_update()
         self.beat_bar.on_update()
         for eg in self.enemy_groups:
-            print(kivyClock.frametime)
             eg.on_update(kivyClock.frametime)
         self.player.on_update()
 

@@ -17,4 +17,9 @@ class VoiceController(MusicController):
     def receive_audio(self, frames, num_channels):
         assert(num_channels == 1)
 
+        '''
+        if self.onbeat:
+            return
+        '''
+
         self.music.add_pitch(self.pitch_detector.write(frames))
