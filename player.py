@@ -27,6 +27,9 @@ class Player(Entity):
 
         map.add_player(self.position, self)
 
+    def return_to_start(self):
+        self.position = self.map.player_start_location()
+
 class PlayerGraphic(EntityGraphic):
     def __init__(self, position, map):
         super(PlayerGraphic, self).__init__()

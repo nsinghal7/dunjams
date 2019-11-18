@@ -80,9 +80,14 @@ class Level(InstructionGroup):
 
         self.player.on_beat(self.map, music_input, movement)
 
-        # TODO: handle things like game over
+        # handle game over
+        if self.map.is_square_dangerous(self.map.player_location()):
+            self.restart()
 
         print("beat off")
+
+    def restart(self):
+        self.player.return_to_start()
 
     def on_update(self):
         self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST
@@ -118,6 +123,12 @@ class Game(BaseWidget):
                 self.level_names.append(game_info.readline().strip())
 
         self.level_index = 0
+        self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
+                            self.music_controller, self.movement_controller)
+        self.canvas.add(self.level)
+
+    def restart_level(self):
+        self.canvas.remove(self.level)
         self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
                             self.music_controller, self.movement_controller)
         self.canvas.add(self.level)
