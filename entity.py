@@ -13,7 +13,7 @@ class Entity(InstructionGroup):
         pass
 
     def on_update(self, dt=None):
-        self.graphic.on_update()
+        return self.graphic.on_update()
 
 class EntityGraphic(InstructionGroup):
     def __init__(self):

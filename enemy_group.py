@@ -27,9 +27,10 @@ class EnemyGroup(InstructionGroup):
         self.cur_pitch = None
 
         self.enemies = AnimGroup()
+        self.projectiles = AnimGroup()
         self.add(self.enemies)
         for desc in enemy_descs:
-            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map))
+            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified))
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):
@@ -44,6 +45,10 @@ class EnemyGroup(InstructionGroup):
         # otherwise return a list of enemies whose pacifying note is the current note
         else:
             return [e.id for e in filter(lambda e: e.note == self.cur_pitch, self.enemies.objects)]
+
+    # a callback for enemies to see if they're pacified
+    def is_enemy_pacified(self, id):
+        return id in self.get_pacified_enemies()
 
     def on_beat_exact(self):
         # play melody exactly on the beat so it doesn't sound weird
@@ -65,15 +70,24 @@ class EnemyGroup(InstructionGroup):
         self.melody_index = (self.melody_index + 1) % len(self.melody)
 
         # Set the current pitch for the group
+        # important for seeing if an enemy is pacified
         if music.is_pitch():
             self.cur_pitch = music.get_midi()
 
+        # add the projectiles to the enemy group
+        # for enemy in self.enemies.objects:
+        #     projectile = enemy.get_projectile()
+        #     if projectile != None:
+        #         self.projectiles.add(projectile)
+
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
-            # add the projectiles to the enemy group
+        # for projectile in self.projectiles.objects:
+        #     projectile.on_beat(map, music, movement)
 
     def on_update(self, dt=None):
         self.enemies.on_update()
+        self.projectiles.on_update()
 
 class EnemyActionDescription:
     def __init__(self, description, enemy_group):
