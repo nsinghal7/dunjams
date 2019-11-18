@@ -6,7 +6,7 @@ import numpy as np
 
 from map_tile import MapTile, PLAYER_START
 
-VIEW_SPEED = 5
+VIEW_SPEED = 8
 
 class Map(InstructionGroup):
     def __init__(self, map_filename, width_ratio, height_ratio):
@@ -57,8 +57,10 @@ class Map(InstructionGroup):
             return False # outside of map isn't passable
 
     def is_square_dangerous(self, position):
-        enemies = self.enemy_map[tuple(position)]
-        return enemies is not None and len(enemies) > 0
+        if position is None:
+            return False
+        enemies = self.enemy_map.get(tuple(position), [])
+        return len(enemies) > 0
 
     def player_location(self):
         return self.player_loc

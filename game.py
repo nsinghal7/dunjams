@@ -25,6 +25,8 @@ EPSILON_AFTER_TICKS = 100
 MAP_WIDTH_RATIO = .75
 MAP_HEIGHT_RATIO = .8
 
+RESET_PAUSE_TIME = 2
+
 class Level(InstructionGroup):
     def __init__(self, level_name, mixer, sched, music_controller, movement_controller):
         super(Level, self).__init__()
@@ -39,6 +41,8 @@ class Level(InstructionGroup):
         self.add(self.pitch_bar)
         self.beat_bar = BeatBar(1, 1 - MAP_HEIGHT_RATIO)
         self.add(self.beat_bar)
+
+        self.restart_pause_time_remaining = 0
 
         self.enemy_groups = enemy_groups_from_spec(WORLD + "/" + level_name + "/enemies.json",
                                                     self.map, self.mixer)
@@ -59,6 +63,7 @@ class Level(InstructionGroup):
 
     def beat_on(self, tick, _):
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, tick + kTicksPerQuarter)
+        self.map.start_new_timestep()
         self.music_controller.beat_on()
         self.movement_controller.beat_on()
         print("beat on")
@@ -78,11 +83,24 @@ class Level(InstructionGroup):
         for eg in self.enemy_groups:
             eg.on_beat(self.map, music_input, movement)
 
-        self.player.on_beat(self.map, music_input, movement)
+        if self.restart_pause_time_remaining > 0:
+            # player can't move due to losing recently
+            self.restart_pause_time_remaining -= 1
+            print("got here: ", self.player.position)
+        else:
+            self.player.on_beat(self.map, music_input, movement)
+            print("moving: ", self.player.position)
 
-        # TODO: handle things like game over
+        # handle game over
+        if self.map.is_square_dangerous(self.map.player_location()):
+            print("restarting: ")
+            self.restart()
 
         print("beat off")
+
+    def restart(self):
+        self.player.return_to_start()
+        self.restart_pause_time_remaining = RESET_PAUSE_TIME
 
     def on_update(self):
         self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST
@@ -117,6 +135,12 @@ class Game(BaseWidget):
                 self.level_names.append(game_info.readline().strip())
 
         self.level_index = 0
+        self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
+                            self.music_controller, self.movement_controller)
+        self.canvas.add(self.level)
+
+    def restart_level(self):
+        self.canvas.remove(self.level)
         self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
                             self.music_controller, self.movement_controller)
         self.canvas.add(self.level)
