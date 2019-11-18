@@ -57,8 +57,10 @@ class Map(InstructionGroup):
             return False # outside of map isn't passable
 
     def is_square_dangerous(self, position):
-        enemies = self.enemy_map.get(tuple(position), None)
-        return enemies is not None and len(enemies) > 0
+        if position is None:
+            return False
+        enemies = self.enemy_map.get(tuple(position), [])
+        return len(enemies) > 0
 
     def player_location(self):
         return self.player_loc
