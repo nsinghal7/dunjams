@@ -6,7 +6,7 @@ import numpy as np
 
 from map_tile import MapTile, PLAYER_START
 
-VIEW_SPEED = 5
+VIEW_SPEED = 8
 
 class Map(InstructionGroup):
     def __init__(self, map_filename, width_ratio, height_ratio):
