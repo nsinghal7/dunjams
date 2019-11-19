@@ -26,4 +26,5 @@ class VoiceController(MusicController):
 
         midi = self.pitch_detector.write(frames)
         cur = self.music.add_pitch(midi)
-        self.pitch_bar.on_player_note(cur)
+        if self.pitch_bar:
+            self.pitch_bar.on_player_note(cur)
