@@ -1,2 +1,2 @@
-1
-level2
+splash splash2
+level level2
