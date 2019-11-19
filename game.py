@@ -114,6 +114,10 @@ class Level(InstructionGroup):
             print("restarting: ")
             self.restart()
 
+        # handle move to next level
+        if self.map.is_player_at_exit():
+            self.game.next_screen()
+
         print("beat off")
 
     def restart(self):
@@ -121,7 +125,9 @@ class Level(InstructionGroup):
         self.restart_pause_time_remaining = RESET_PAUSE_TIME
 
     def unload(self):
-        pass
+        self.sched.remove(self.cmd_beat_off)
+        self.sched.remove(self.cmd_beat_on)
+        self.sched.remove(self.cmd_beat_on_exact)
 
     def on_key_down(self, keycode, modifiers):
         pass
