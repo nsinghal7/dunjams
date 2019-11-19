@@ -20,7 +20,7 @@ from pitch_bar import PitchBar
 
 WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 40
-EPSILON_AFTER_TICKS = 100
+EPSILON_AFTER_TICKS = 140
 
 MAP_WIDTH_RATIO = .75
 MAP_HEIGHT_RATIO = .8
