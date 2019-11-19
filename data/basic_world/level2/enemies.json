@@ -19,7 +19,7 @@
           "attacks": ["d"],
           "note": 62,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.JPG",
+            "angry": "./data/sprites/angry_enemy.PNG",
             "pacified": "./data/sprites/happy_enemy.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
