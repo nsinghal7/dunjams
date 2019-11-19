@@ -66,12 +66,12 @@ class Level(InstructionGroup):
         self.map.start_new_timestep()
         self.music_controller.beat_on()
         self.movement_controller.beat_on()
+        for eg in self.enemy_groups:
+            eg.on_beat_exact()
         print("beat on")
 
     def beat_on_exact(self, tick, _):
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, tick + kTicksPerQuarter)
-        for eg in self.enemy_groups:
-            eg.on_beat_exact()
 
     def beat_off(self, tick, _):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
@@ -91,7 +91,7 @@ class Level(InstructionGroup):
             self.player.on_beat(self.map, music_input, movement)
             print("moving: ", self.player.position)
 
-        # handle game over
+        handle game over
         if self.map.is_square_dangerous(self.map.player_location()):
             print("restarting: ")
             self.restart()
