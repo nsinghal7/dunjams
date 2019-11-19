@@ -6,7 +6,11 @@
           "motions": [[0, 0]],
           "attacks": ["d"],
           "note": 60,
-          "sprite": "./data/sprites/crappy_enemy.PNG"
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
         },
         {
           "id": 1,
@@ -14,7 +18,11 @@
           "motions": [[0, 0]],
           "attacks": ["d"],
           "note": 62,
-          "sprite": "./data/sprites/crappy_enemy.PNG"
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
         },
         {
           "id": 2,
@@ -22,15 +30,23 @@
           "motions": [[0, 0]],
           "attacks": ["d"],
           "note": 64,
-          "sprite": "./data/sprites/crappy_enemy.PNG"
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
         },
         {
           "id": 3,
           "init_pos": [1, 5],
           "motions": [[0, 0]],
-          "attacks": ["d"],
+          "attacks": ["r"],
           "note": 62,
-          "sprite": "./data/sprites/crappy_enemy.PNG"
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
         }
       ],
     "melody": [60, 62, 64, 62],
