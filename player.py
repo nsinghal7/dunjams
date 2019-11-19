@@ -17,7 +17,7 @@ class Player(Entity):
         self.draw_graphics()
 
     def on_beat(self, map, music, movement):
-        delta = movement.get_delta()
+        delta = movement
 
         # collision detection
         new_pos = (self.position[0] + delta[0], self.position[1] + delta[1])

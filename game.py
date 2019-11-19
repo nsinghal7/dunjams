@@ -20,7 +20,7 @@ from pitch_bar import PitchBar
 
 WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 40
-EPSILON_AFTER_TICKS = 100
+EPSILON_AFTER_TICKS = 140
 
 MAP_WIDTH_RATIO = .75
 MAP_HEIGHT_RATIO = .8
@@ -154,6 +154,9 @@ class Game(BaseWidget):
 
     def on_key_down(self, keycode, modifiers):
         self.movement_controller.on_key_down(keycode, modifiers)
+
+    def on_key_up(self, keycode):
+        self.movement_controller.on_key_up(keycode)
 
 if __name__ == '__main__':
     run(Game)
