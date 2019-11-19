@@ -1,5 +1,6 @@
 from music_controller import MusicController, Pitch, PitchEvent
 from input_demo import PitchDetector
+import copy
 
 class VoiceController(MusicController):
     def __init__(self):
@@ -10,8 +11,9 @@ class VoiceController(MusicController):
 
     def get_music(self):
         self.music.finalize()
-        music = self.music
-        self.music = Pitch()
+        music = copy.copy(self.music)
+        if len(self.music.events) > 3:
+            self.music.events = self.music.events[-3:]
         return music
 
     def receive_audio(self, frames, num_channels):
@@ -22,4 +24,6 @@ class VoiceController(MusicController):
             return
         '''
 
-        self.music.add_pitch(self.pitch_detector.write(frames))
+        midi = self.pitch_detector.write(frames)
+        cur = self.music.add_pitch(midi)
+        self.pitch_bar.on_player_note(cur)

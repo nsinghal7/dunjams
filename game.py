@@ -22,7 +22,7 @@ WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 40
 EPSILON_AFTER_TICKS = 140
 
-MAP_WIDTH_RATIO = .75
+MAP_WIDTH_RATIO = 1
 MAP_HEIGHT_RATIO = .8
 
 RESET_PAUSE_TIME = 2
@@ -37,15 +37,17 @@ class Level(InstructionGroup):
 
         self.map = Map(WORLD + "/" + level_name + "/map.txt", MAP_WIDTH_RATIO, MAP_HEIGHT_RATIO)
         self.add(self.map)
-        self.pitch_bar = PitchBar(1 - MAP_WIDTH_RATIO, MAP_HEIGHT_RATIO)
+        self.pitch_bar = PitchBar(55, MAP_WIDTH_RATIO, 1 - MAP_HEIGHT_RATIO)
         self.add(self.pitch_bar)
-        self.beat_bar = BeatBar(1, 1 - MAP_HEIGHT_RATIO)
-        self.add(self.beat_bar)
+        #self.beat_bar = BeatBar(1, 1 - MAP_HEIGHT_RATIO)
+        #self.add(self.beat_bar)
+
+        self.music_controller.pitch_bar = self.pitch_bar
 
         self.restart_pause_time_remaining = 0
 
         self.enemy_groups = enemy_groups_from_spec(WORLD + "/" + level_name + "/enemies.json",
-                                                    self.map, self.mixer)
+                                                    self.map, self.mixer, self.pitch_bar)
         for eg in self.enemy_groups:
             self.add(eg)
 
@@ -105,7 +107,7 @@ class Level(InstructionGroup):
     def on_update(self):
         self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST
         self.pitch_bar.on_update()
-        self.beat_bar.on_update()
+        #self.beat_bar.on_update()
         for eg in self.enemy_groups:
             eg.on_update(kivyClock.frametime)
         self.player.on_update()

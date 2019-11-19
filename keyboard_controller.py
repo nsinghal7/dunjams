@@ -6,6 +6,11 @@ class KeyboardController(MovementController):
 
         self.active_keys = []
 
+    def beat_on(self):
+        super(KeyboardController, self).beat_on()
+
+        self.movement = self.get_delta()
+
     def on_key_down(self, keycode, modifiers):
         if keycode[1] in ["up", "down", "right", "left"]:
             self.active_keys.append(keycode[1][0])

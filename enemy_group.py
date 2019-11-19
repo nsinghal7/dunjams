@@ -9,13 +9,13 @@ from common.note import NoteGenerator, Envelope
 
 from enemy import Enemy
 
-def enemy_groups_from_spec(filename, map, mixer):
+def enemy_groups_from_spec(filename, map, mixer, pitch_bar):
     with open(filename) as f:
         data = json.load(f)
-        return [EnemyGroup(desc, map, mixer) for desc in data]
+        return [EnemyGroup(desc, map, mixer, pitch_bar) for desc in data]
 
 class EnemyGroup(InstructionGroup):
-    def __init__(self, description, map, mixer):
+    def __init__(self, description, map, mixer, pitch_bar):
         super(EnemyGroup, self).__init__()
         self.mixer = mixer
         enemy_descs = description["enemies"]
@@ -31,6 +31,8 @@ class EnemyGroup(InstructionGroup):
         self.add(self.enemies)
         for desc in enemy_descs:
             self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified))
+
+        self.pitch_bar = pitch_bar
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):
@@ -55,6 +57,8 @@ class EnemyGroup(InstructionGroup):
         note = NoteGenerator(self.melody[self.melody_index], .3)
         env = Envelope(note, .1, 1, .3, 1)
         self.mixer.add(env)
+
+        self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
 
     def on_beat(self, map, music, movement):
         # check if player sang correct note (or if no note was required)
