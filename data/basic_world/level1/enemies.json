@@ -1,11 +1,16 @@
 [{
     "enemies": [
         {
+          "id": 0,
           "init_pos": [2, 2],
           "motions": [[0, 1], [0, -1]],
           "attacks": ["u", ""],
-          "note": -1,
-          "sprite": "./data/sprites/crappy_enemy.PNG"
+          "note": 60,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
         }
       ],
     "melody": [60, 60, 60, 61],

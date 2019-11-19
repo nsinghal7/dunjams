@@ -55,7 +55,7 @@ class EnemyGroup(InstructionGroup):
     def on_beat_exact(self):
         # play melody exactly on the beat so it doesn't sound weird
         note = NoteGenerator(self.melody[self.melody_index], .3)
-        env = Envelope(note, .1, 1, .3, 1)
+        env = Envelope(note, .02, 1, .3, 1)
         self.mixer.add(env)
 
         self.pitch_bar.on_enemy_note(self.melody[self.melody_index])

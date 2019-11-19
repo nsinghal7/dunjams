@@ -27,9 +27,27 @@ MAP_HEIGHT_RATIO = .8
 
 RESET_PAUSE_TIME = 2
 
+class SplashScreen(InstructionGroup):
+    def __init__(self, splash_name, mixer, sched, game):
+        super(SplashScreen, self).__init__()
+        self.game = game
+        # TODO draw self
+
+    def unload(self):
+        # TODO: clean up anything that needs cleaning up before this splash screen can
+        # be removed. This includes removing any audio or scheduler callbacks
+        pass
+
+    def on_key_down(self, keycode, modifiers):
+        self.game.next_screen()
+
+    def on_update(self):
+        pass
+
 class Level(InstructionGroup):
-    def __init__(self, level_name, mixer, sched, music_controller, movement_controller):
+    def __init__(self, level_name, mixer, sched, music_controller, movement_controller, game):
         super(Level, self).__init__()
+        self.game = game
         self.mixer = mixer
         self.sched = sched
         self.music_controller = music_controller
@@ -98,11 +116,23 @@ class Level(InstructionGroup):
             print("restarting: ")
             self.restart()
 
+        # handle move to next level
+        if self.map.is_player_at_exit():
+            self.game.next_screen()
+
         print("beat off")
 
     def restart(self):
         self.player.return_to_start()
         self.restart_pause_time_remaining = RESET_PAUSE_TIME
+
+    def unload(self):
+        self.sched.remove(self.cmd_beat_off)
+        self.sched.remove(self.cmd_beat_on)
+        self.sched.remove(self.cmd_beat_on_exact)
+
+    def on_key_down(self, keycode, modifiers):
+        pass
 
     def on_update(self):
         self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST
@@ -131,24 +161,33 @@ class Game(BaseWidget):
 
         # load game
         with open(WORLD + "/game_info.txt") as game_info:
-            self.num_levels = int(game_info.readline().strip())
-            self.level_names = []
-            for _ in range(self.num_levels):
-                self.level_names.append(game_info.readline().strip())
+            self.screens = [line.strip().split(" ") for line in game_info]
 
-        self.level_index = 0
-        self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
-                            self.music_controller, self.movement_controller)
-        self.canvas.add(self.level)
+        self.screen_index = 0
+        self.screen = None
+        self.load_screen()
 
-    def restart_level(self):
-        self.canvas.remove(self.level)
-        self.level = Level(self.level_names[self.level_index], self.mixer, self.sched,
-                            self.music_controller, self.movement_controller)
-        self.canvas.add(self.level)
+    def load_screen(self):
+        screen_type, name = self.screens[self.screen_index]
+        if screen_type == "splash":
+            self.screen = SplashScreen(name, self.mixer, self.sched, self)
+        elif screen_type == "level":
+            self.screen = Level(name, self.mixer, self.sched, self.music_controller,
+                                self.movement_controller, self)
+        self.canvas.add(self.screen)
+
+    def unload_screen(self):
+        self.screen.unload()
+        self.canvas.remove(self.screen)
+        self.screen = None
+
+    def next_screen(self):
+        self.unload_screen()
+        self.screen_index += 1
+        self.load_screen()
 
     def on_update(self):
-        self.level.on_update()
+        self.screen.on_update()
         self.audio.on_update()
 
     def receive_audio(self, frames, num_channels):
@@ -156,6 +195,7 @@ class Game(BaseWidget):
 
     def on_key_down(self, keycode, modifiers):
         self.movement_controller.on_key_down(keycode, modifiers)
+        self.screen.on_key_down(keycode, modifiers)
 
     def on_key_up(self, keycode):
         self.movement_controller.on_key_up(keycode)
