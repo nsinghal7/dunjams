@@ -61,10 +61,7 @@ class Pitch(Music):
         else:
             self.events.append(PitchEvent(midi, 1))
 
-        for event in self.events[::-1]:
-            if not event.is_noisy():
-                return event.value
-        return 0
+        return self.get_midi()
 
     def finalize(self):
         if not len(self.events):
@@ -89,7 +86,7 @@ class Pitch(Music):
 
     def get_midi(self):
         for event in self.events[::-1]:
-            if event.value != 0:
+            if not event.is_noisy():
                 return event.value
         return 0
 

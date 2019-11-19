@@ -10,7 +10,7 @@ class VoiceController(MusicController):
         self.pitch_detector = PitchDetector()
 
     def get_music(self):
-        self.music.finalize()
+        #self.music.finalize()
         music = copy.copy(self.music)
         if len(self.music.events) > 3:
             self.music.events = self.music.events[-3:]
