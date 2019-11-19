@@ -55,6 +55,10 @@ class Enemy(Entity):
             return Projectile(p_pos, next_attack, self.map, self.sprites["projectile"])
         return None
 
+    def on_half_beat(self, map, music):
+        if self.is_enemy_pacified(self.id):
+            self.projectiles.clear()
+
     def on_beat(self, map, music, movement):
         # move the enemy
         self.pos = self.actions.get_next_pos(self.pos)

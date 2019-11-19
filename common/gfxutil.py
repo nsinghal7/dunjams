@@ -166,6 +166,11 @@ class AnimGroup(InstructionGroup) :
             self.objects.remove(o)
             self.remove(o)
 
+    def clear(self):
+        for o in self.objects:
+            self.remove(o)
+        self.objects.clear()
+
     def size(self):
         return len(self.objects)
 

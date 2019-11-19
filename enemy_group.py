@@ -60,34 +60,24 @@ class EnemyGroup(InstructionGroup):
 
         self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
 
-    def on_beat(self, map, music, movement):
-        # check if player sang correct note (or if no note was required)
-        # TODO: check if player doesn't sing a note when none is required
-        # Increment the melody progress for all or nothing groups
+    def on_half_beat(self, map, music):
         if self.melody[self.melody_index] == 0 or (music.is_pitch() and
-                        music.get_midi() == self.melody[self.melody_index]):
-            # correct pitch
-            self.melody_progress += 1
+                    music.get_midi() == self.melody[self.melody_index]):
+            self.melody_progress += 1 # correct pitch
         else:
-            # messed up! immediately reset progress
-            self.melody_progress = 0
+            self.melody_progress = 0 # incorrect
+
         self.melody_index = (self.melody_index + 1) % len(self.melody)
 
-        # Set the current pitch for the group
-        # important for seeing if an enemy is pacified
         if music.is_pitch():
             self.cur_pitch = music.get_midi()
 
-        # add the projectiles to the enemy group
-        # for enemy in self.enemies.objects:
-        #     projectile = enemy.get_projectile()
-        #     if projectile != None:
-        #         self.projectiles.add(projectile)
+        for enemy in self.enemies.objects:
+            enemy.on_half_beat(map, music)
 
+    def on_beat(self, map, music, movement):
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
-        # for projectile in self.projectiles.objects:
-        #     projectile.on_beat(map, music, movement)
 
     def on_update(self, dt=None):
         self.enemies.on_update()

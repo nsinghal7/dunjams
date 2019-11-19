@@ -21,6 +21,7 @@ from pitch_bar import PitchBar
 WORLD = "data/basic_world"
 EPSILON_BEFORE_TICKS = 40
 EPSILON_AFTER_TICKS = 140
+HALF_BEAT_TICKS = 240
 
 MAP_WIDTH_RATIO = 1
 MAP_HEIGHT_RATIO = .8
@@ -81,10 +82,12 @@ class Level(InstructionGroup):
         next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
         next_pre_beat = next_beat - EPSILON_BEFORE_TICKS
         next_post_beat = next_beat + EPSILON_AFTER_TICKS
+        next_half_beat = next_beat + HALF_BEAT_TICKS
 
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, next_beat)
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_post_beat)
+        self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, next_half_beat)
 
     def beat_on(self, tick, _):
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, tick + kTicksPerQuarter)
@@ -98,22 +101,28 @@ class Level(InstructionGroup):
         for eg in self.enemy_groups:
             eg.on_beat_exact()
 
-    def beat_off(self, tick, _):
-        self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
+    def half_beat(self, tick, _):
+        self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, tick + kTicksPerQuarter)
         self.music_controller.beat_off()
         music_input = self.music_controller.get_music()
+
+        for eg in self.enemy_groups:
+            eg.on_half_beat(self.map, music_input)
+
+    def beat_off(self, tick, _):
+        self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
         self.movement_controller.beat_off()
         movement = self.movement_controller.get_movement()
 
         for eg in self.enemy_groups:
-            eg.on_beat(self.map, music_input, movement)
+            eg.on_beat(self.map, None, movement)
 
         if self.restart_pause_time_remaining > 0:
             # player can't move due to losing recently
             self.restart_pause_time_remaining -= 1
             print("got here: ", self.player.position)
         else:
-            self.player.on_beat(self.map, music_input, movement)
+            self.player.on_beat(self.map, None, movement)
             print("moving: ", self.player.position)
 
         # handle game over
@@ -135,6 +144,7 @@ class Level(InstructionGroup):
         self.sched.remove(self.cmd_beat_off)
         self.sched.remove(self.cmd_beat_on)
         self.sched.remove(self.cmd_beat_on_exact)
+        self.sched.remove(self.cmd_half_beat)
 
     def on_key_down(self, keycode, modifiers):
         pass
