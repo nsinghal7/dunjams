@@ -155,5 +155,8 @@ class Game(BaseWidget):
     def on_key_down(self, keycode, modifiers):
         self.movement_controller.on_key_down(keycode, modifiers)
 
+    def on_key_up(self, keycode):
+        self.movement_controller.on_key_up(keycode)
+
 if __name__ == '__main__':
     run(Game)
