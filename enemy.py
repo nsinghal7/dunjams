@@ -93,6 +93,8 @@ class EnemyGraphic(EntityGraphic):
         self.next_pos = self.pos
         self.map = map
 
+        self.add(Color())
+
         if sprite:
             self.rect = Rectangle(pos=self.map.tile_to_pixels(self.pos), size=map.tile_size(), source=sprite)
         else:

@@ -4,6 +4,7 @@ SUSTAIN_TRAILING_BUFFER = 2
 class MusicController(object):
     def __init__(self):
         self.onbeat = False
+        self.pitch_bar = None
 
     def beat_on(self):
         self.onbeat = True
@@ -60,6 +61,8 @@ class Pitch(Music):
         else:
             self.events.append(PitchEvent(midi, 1))
 
+        return self.get_midi(True)
+
     def finalize(self):
         if not len(self.events):
             return
@@ -81,9 +84,9 @@ class Pitch(Music):
             self.events[-2].duration += self.events[-1].duration
             self.events.pop()
 
-    def get_midi(self):
+    def get_midi(self, allow_none=False):
         for event in self.events[::-1]:
-            if event.value != 0:
+            if not event.is_noisy() and (allow_none or event.value != 0):
                 return event.value
         return 0
 

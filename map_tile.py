@@ -36,6 +36,9 @@ class MapTile(InstructionGroup):
     def is_passable(self):
         return self.kind != WALL
 
+    def is_exit(self):
+        return self.kind == EXIT
+
     def on_update(self):
         location = self.map.tile_to_pixels(self.position)
         self.rect.pos = location

@@ -62,6 +62,11 @@ class Map(InstructionGroup):
         enemies = self.enemy_map.get(tuple(position), [])
         return len(enemies) > 0
 
+    def is_player_at_exit(self):
+        if self.player_loc is None:
+            return False
+        return self.tiles[self.player_loc[0]][self.player_loc[1]].is_exit()
+
     def player_location(self):
         return self.player_loc
 
