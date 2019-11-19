@@ -28,7 +28,7 @@ MAP_HEIGHT_RATIO = .8
 RESET_PAUSE_TIME = 2
 
 class SplashScreen(InstructionGroup):
-    def __init__(self, splash_name, mixer, sched, game):
+    def __init__(self, splash_name, audio, game):
         super(SplashScreen, self).__init__()
         self.game = game
         # TODO draw self
@@ -45,11 +45,16 @@ class SplashScreen(InstructionGroup):
         pass
 
 class Level(InstructionGroup):
-    def __init__(self, level_name, mixer, sched, music_controller, movement_controller, game):
+    def __init__(self, level_name, audio, music_controller, movement_controller, game):
         super(Level, self).__init__()
         self.game = game
-        self.mixer = mixer
-        self.sched = sched
+        self.audio = audio
+        self.mixer = Mixer()
+        self.tempo_map = SimpleTempoMap(120) #TODO load from level spec
+        self.sched = AudioScheduler(self.tempo_map)
+        self.audio.set_generator(self.sched)
+        self.sched.set_generator(self.mixer)
+
         self.music_controller = music_controller
         self.movement_controller = movement_controller
 
@@ -149,11 +154,6 @@ class Game(BaseWidget):
 
         # audio setup
         self.audio = Audio(2, input_func=self.receive_audio, num_input_channels = 1)
-        self.mixer = Mixer()
-        self.tempo_map = SimpleTempoMap(120)
-        self.sched = AudioScheduler(self.tempo_map)
-        self.audio.set_generator(self.sched)
-        self.sched.set_generator(self.mixer)
 
         self.music_controller = VoiceController()
         self.movement_controller = KeyboardController()
@@ -170,9 +170,9 @@ class Game(BaseWidget):
     def load_screen(self):
         screen_type, name = self.screens[self.screen_index]
         if screen_type == "splash":
-            self.screen = SplashScreen(name, self.mixer, self.sched, self)
+            self.screen = SplashScreen(name, self.audio, self)
         elif screen_type == "level":
-            self.screen = Level(name, self.mixer, self.sched, self.music_controller,
+            self.screen = Level(name, self.audio, self.music_controller,
                                 self.movement_controller, self)
         self.canvas.add(self.screen)
 
