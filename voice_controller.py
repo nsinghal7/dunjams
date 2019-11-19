@@ -12,8 +12,13 @@ class VoiceController(MusicController):
     def get_music(self):
         #self.music.finalize()
         music = copy.copy(self.music)
-        if len(self.music.events) > 3:
-            self.music.events = self.music.events[-3:]
+        events = []
+        for event in self.music.events[::-1]:
+            if len(events) < 3:
+                events.insert(0, event)
+            if not event.is_noisy():
+                break
+        self.music.events = events
         return music
 
     def receive_audio(self, frames, num_channels):
