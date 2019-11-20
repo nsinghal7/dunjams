@@ -112,7 +112,7 @@
     "durations": [2, 2, 2, 2],
     "pacify": "all",
     "center": [4, 16],
-    "sound_thresh": 5,
+    "sound_thresh": 6,
     "mel_thresh": 2,
     "bpm": 124
 }]
