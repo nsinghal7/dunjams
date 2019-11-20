@@ -204,7 +204,8 @@ class Projectile(Entity):
         # self.rect.pos = self.map.tile_to_pixels(self.pos) + self.pixel_size / 2
         self.rect.pos = self.map.tile_to_pixels(self.pos + [deltay, 0])
 
-        return self.pos[0] > 0 and self.pos[1] > 0 and self.pos[1] < self.map.map_size()[1] and self.pos[0] < self.map.map_size()[0]
+        return self.map.is_square_passable(self.next_pos)
+        # return self.pos[0] > 0 and self.pos[1] > 0 and self.pos[1] < self.map.map_size()[1] and self.pos[0] < self.map.map_size()[0]
 
 
 class ProjectileGraphic(EntityGraphic):

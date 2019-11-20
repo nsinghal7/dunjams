@@ -73,6 +73,10 @@ class EnemyGroup(InstructionGroup):
             # messed up! immediately reset progress
             self.melody_progress = 0
 
+        print("melody progress:" + str(self.melody_progress))
+        print(self.melody_index)
+        print(self.melody)
+
         if self.melody_progress >= len(self.melody):
             self.melody_complete = True
 
@@ -80,6 +84,7 @@ class EnemyGroup(InstructionGroup):
 
         if music.is_pitch():
             self.cur_pitch = music.get_midi()
+            print("pitch:" + str(self.cur_pitch))
 
         for enemy in self.enemies.objects:
             enemy.on_half_beat(map, music)
