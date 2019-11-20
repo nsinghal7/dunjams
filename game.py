@@ -1,3 +1,5 @@
+import json
+
 from common.core import BaseWidget, run, lookup
 from common.audio import Audio
 from common.mixer import Mixer
@@ -15,10 +17,12 @@ from map import Map
 from voice_controller import VoiceController
 from keyboard_controller import KeyboardController
 from player import Player
-from enemy_group import EnemyGroup, enemy_groups_from_spec
+from enemy_group import EnemyGroup
 from beat_bar import BeatBar
 from pitch_bar import PitchBar
 from config import EPSILON_BEFORE, EPSILON_AFTER, HALF_BEAT_TICKS
+
+import numpy as np
 
 WORLD = "data/basic_world"
 
@@ -80,13 +84,13 @@ class Level(InstructionGroup):
 
         self.restart_pause_time_remaining = 0
 
-        self.enemy_groups = enemy_groups_from_spec(WORLD + "/" + level_name + "/enemies.json",
-                                                    self.map, self.mixer, self.pitch_bar)
-        for eg in self.enemy_groups:
-            self.add(eg)
-
         self.player = Player(self.map)
         self.add(self.player)
+
+        with open(WORLD + "/" + level_name + "/enemies.json") as f:
+            self.enemy_group_specs = json.load(f)
+
+        self.enemy_group_pacified = [False for _ in self.enemy_group_specs]
 
 
         next_beat = 0 # we know scheduler time is 0
@@ -94,10 +98,37 @@ class Level(InstructionGroup):
         next_post_beat = next_beat + self.tempo_map.dt_to_tick(EPSILON_AFTER)
         next_half_beat = next_beat + HALF_BEAT_TICKS
 
+        self.current_beat = 0
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, next_beat)
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_post_beat)
         self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, next_half_beat)
+
+        self.enemy_group = None
+        self.enemy_group_index = None
+        self.update_enemy_group()
+
+    def update_enemy_group(self):
+        closest = None
+        cd = 10000
+        pos = np.array(self.player.get_position())
+        for i, eg in enumerate(self.enemy_group_specs):
+            dist = np.linalg.norm(pos - eg["center"])
+            if dist < cd or closest is None:
+                closest, cd = i, dist
+
+        if self.enemy_group is not None:
+            if self.enemy_group_index == closest:
+                # stay with same enemy group
+                return
+            else:
+                self.enemy_group_pacified[self.enemy_group_index] = self.enemy_group.is_group_pacified()
+                self.remove(self.enemy_group)
+
+        self.enemy_group = EnemyGroup(self.enemy_group_specs[closest], self.map, self.mixer,
+                                        self.pitch_bar, self.current_beat, self.enemy_group_pacified[closest])
+        self.enemy_group_index = closest
+        self.add(self.enemy_group)
 
     def bg_music_reset(self, tick, _):
         self.cmd_bg_music_reset = self.sched.post_at_tick(self.bg_music_reset,
@@ -115,24 +146,24 @@ class Level(InstructionGroup):
 
     def beat_on_exact(self, tick, _):
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, tick + kTicksPerQuarter)
-        for eg in self.enemy_groups:
-            eg.on_beat_exact()
+        if self.enemy_group is not None:
+            self.enemy_group.on_beat_exact()
 
     def half_beat(self, tick, _):
         self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, tick + kTicksPerQuarter)
         self.music_controller.beat_off()
         music_input = self.music_controller.get_music()
 
-        for eg in self.enemy_groups:
-            eg.on_half_beat(self.map, music_input)
+        if self.enemy_group is not None:
+            self.enemy_group.on_half_beat(self.map, music_input)
 
     def beat_off(self, tick, _):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
         self.movement_controller.beat_off()
         movement = self.movement_controller.get_movement()
 
-        for eg in self.enemy_groups:
-            eg.on_beat(self.map, None, movement)
+        if self.enemy_group is not None:
+            self.enemy_group.on_beat(self.map, None, movement)
 
         if self.restart_pause_time_remaining > 0:
             # player can't move due to losing recently
@@ -141,6 +172,7 @@ class Level(InstructionGroup):
         else:
             self.player.on_beat(self.map, None, movement)
             print("moving: ", self.player.position)
+            self.update_enemy_group()
 
         # handle game over
         if self.map.is_square_dangerous(self.map.player_location()):
@@ -152,6 +184,7 @@ class Level(InstructionGroup):
             self.game.next_screen()
 
         print("beat off")
+        self.current_beat += 1
 
     def restart(self):
         self.player.return_to_start()
@@ -172,8 +205,8 @@ class Level(InstructionGroup):
         self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST
         self.pitch_bar.on_update()
         #self.beat_bar.on_update()
-        for eg in self.enemy_groups:
-            eg.on_update(kivyClock.frametime)
+        if self.enemy_group is not None:
+            self.enemy_group.on_update(kivyClock.frametime)
         self.player.on_update()
 
 
