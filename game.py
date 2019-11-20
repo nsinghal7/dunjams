@@ -52,15 +52,19 @@ class Level(InstructionGroup):
         self.game = game
         self.audio = audio
         self.mixer = Mixer()
-        with open(WORLD + "/" + level_name + "/tempo.txt") as f:
-            self.tempo_map = SimpleTempoMap(int(f.readline().strip()))
+        with open(WORLD + "/" + level_name + "/music_timing.txt") as f:
+            tempo = int(f.readline().strip())
+            self.bg_music_beats_per_loop = int(f.readline().strip())
+        self.tempo_map = SimpleTempoMap(tempo)
         self.sched = AudioScheduler(self.tempo_map)
         self.audio.set_generator(self.sched)
         self.sched.set_generator(self.mixer)
 
         self.bg_music_file = WaveFile(WORLD + "/" + level_name + "/background.wav")
-        self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=True)
+        self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=False) # we loop explicitly
         self.mixer.add(self.bg_music_gen)
+        self.cmd_bg_music_reset = self.sched.post_at_tick(self.bg_music_reset,
+                            kTicksPerQuarter * self.bg_music_beats_per_loop)
 
         self.music_controller = music_controller
         self.movement_controller = movement_controller
@@ -91,6 +95,13 @@ class Level(InstructionGroup):
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, next_beat)
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_post_beat)
+
+    def bg_music_reset(self, tick, _):
+        self.cmd_bg_music_reset = self.sched.post_at_tick(self.bg_music_reset,
+                                    tick + kTicksPerQuarter * self.bg_music_beats_per_loop)
+        self.bg_music_gen.release()
+        self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=False) # we loop it explicitly
+        self.mixer.add(self.bg_music_gen)
 
     def beat_on(self, tick, _):
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, tick + kTicksPerQuarter)
