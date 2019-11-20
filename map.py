@@ -54,6 +54,7 @@ class Map(InstructionGroup):
         if 0 <= position[0] < len(self.tiles) and 0 <= position[1] < len(self.tiles[0]):
             return self.tiles[position[0]][position[1]].is_passable()
         else:
+            print('outside of map')
             return False # outside of map isn't passable
 
     def is_square_dangerous(self, position):
