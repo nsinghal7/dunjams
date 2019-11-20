@@ -39,6 +39,9 @@ class Player(Entity):
         self.graphic.set_position(self.position)
         self.map.add_player(self.position, self)
 
+    def set_disabled(self, is_disabled):
+        self.graphic.set_disabled(is_disabled)
+
 class PlayerGraphic(EntityGraphic):
     def __init__(self, position, map):
         super(PlayerGraphic, self).__init__()
@@ -68,6 +71,12 @@ class PlayerGraphic(EntityGraphic):
         self.goal_position = np.array(position)
         self.bouncing = True
         self.bounce_prog = 0
+
+    def set_disabled(self, is_disabled):
+        if is_disabled:
+            self.color.rgb = (.5, .5, .5)
+        else:
+            self.color.rgb = (1, 1, 1)
 
     def on_update(self):
         dt = kivyClock.frametime
