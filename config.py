@@ -5,6 +5,7 @@
 from environment import ENVIRONMENT # THIS MUST EXIST, BUT DON'T PUSH IT TO REPO
 
 # TODO: define other environments and calibrate values
+HALF_BEAT_TICKS = 240
 if ENVIRONMENT == 'mac':
     EPSILON_BEFORE = 40 / 960
     EPSILON_AFTER = 140 / 960
