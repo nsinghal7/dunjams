@@ -1,5 +1,3 @@
-import json
-
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
@@ -9,21 +7,17 @@ from common.note import NoteGenerator, Envelope
 
 from enemy import Enemy
 
-def enemy_groups_from_spec(filename, map, mixer, pitch_bar):
-    with open(filename) as f:
-        data = json.load(f)
-        return [EnemyGroup(desc, map, mixer, pitch_bar) for desc in data]
-
 class EnemyGroup(InstructionGroup):
-    def __init__(self, description, map, mixer, pitch_bar):
+    def __init__(self, description, map, mixer, pitch_bar, current_beat, is_pacified):
         super(EnemyGroup, self).__init__()
         self.mixer = mixer
         enemy_descs = description["enemies"]
         self.melody = description["melody"]
         self.type = description["pacify"] # this will be either 'individual' or 'all'
         self.melody_progress = 0 # how many correct notes in a row, used for pacifying all of them
-        self.melody_index = 0 # index of next note to expect/play
-        self.melody_complete = False # for 'all' type groups, keep track if the whole melody is completed
+        self.melody_index = current_beat % len(self.melody) # index of next note to expect/play
+        # for 'all' type groups, keep track if the whole melody is completed
+        self.melody_complete = is_pacified
 
         self.cur_pitch = None
 
@@ -35,6 +29,9 @@ class EnemyGroup(InstructionGroup):
             self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified))
 
         self.pitch_bar = pitch_bar
+
+    def is_group_pacified(self):
+        return self.melody_complete
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):

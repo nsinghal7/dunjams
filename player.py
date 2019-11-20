@@ -31,6 +31,9 @@ class Player(Entity):
 
         map.add_player(self.position, self)
 
+    def get_position(self):
+        return self.position
+
     def return_to_start(self):
         self.position = self.map.player_start_location()
         self.graphic.set_position(self.position)
