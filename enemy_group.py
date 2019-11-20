@@ -47,7 +47,7 @@ class EnemyGroup(InstructionGroup):
                 return []
         # otherwise return a list of enemies whose pacifying note is the current note
         else:
-            return [e.id for e in filter(lambda e: e.note == self.cur_pitch, self.enemies.objects)]
+            return [e.id for e in filter(lambda e: e.note == self.cur_pitch and e.note == self.melody[self.melody_index - 1], self.enemies.objects)]
 
     # a callback for enemies to see if they're pacified
     def is_enemy_pacified(self, id):
@@ -72,11 +72,6 @@ class EnemyGroup(InstructionGroup):
         else:
             # messed up! immediately reset progress
             self.melody_progress = 0
-        print(self.melody_progress)
-
-        print("melody progress:" + str(self.melody_progress))
-        print(self.melody_index)
-        print(self.melody)
 
         if self.melody_progress >= len(self.melody):
             self.melody_complete = True

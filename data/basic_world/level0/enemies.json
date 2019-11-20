@@ -4,7 +4,7 @@
           "id": 0,
           "init_pos": [5, 12],
           "motions": [[0, 0], [0, 0]],
-          "attacks": ["u", ""],
+          "attacks": ["", "u"],
           "note": 60,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
@@ -16,7 +16,7 @@
           "id": 1,
           "init_pos": [1, 13],
           "motions": [[0, 0]],
-          "attacks": ["", "d"],
+          "attacks": ["d", ""],
           "note": 62,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
