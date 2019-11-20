@@ -17,10 +17,9 @@ from player import Player
 from enemy_group import EnemyGroup, enemy_groups_from_spec
 from beat_bar import BeatBar
 from pitch_bar import PitchBar
+from config import EPSILON_BEFORE_TICKS, EPSILON_AFTER_TICKS
 
 WORLD = "data/basic_world"
-EPSILON_BEFORE_TICKS = 40
-EPSILON_AFTER_TICKS = 140
 
 MAP_WIDTH_RATIO = 1
 MAP_HEIGHT_RATIO = .8
