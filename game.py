@@ -172,7 +172,6 @@ class Level(InstructionGroup):
         else:
             self.player.on_beat(self.map, None, movement)
             print("moving: ", self.player.position)
-            self.update_enemy_group()
 
         # handle game over
         if self.map.is_square_dangerous(self.map.player_location()):
@@ -185,6 +184,7 @@ class Level(InstructionGroup):
 
         print("beat off")
         self.current_beat += 1
+        self.update_enemy_group()
 
     def restart(self):
         self.player.return_to_start()
