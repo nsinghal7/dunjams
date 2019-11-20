@@ -145,7 +145,6 @@ class Level(InstructionGroup):
         self.music_controller.beat_on()
         self.movement_controller.beat_on()
 
-        self.has_performed_beat_off = False
         print("beat on")
 
     def beat_on_exact(self, tick, _):
@@ -154,6 +153,7 @@ class Level(InstructionGroup):
             self.enemy_group.on_beat_exact()
             self.enemy_group.on_beat(self.map, None, None)
 
+        self.has_performed_beat_off = False
         if self.movement_controller.is_ready():
             self.perform_beat_off()
 
