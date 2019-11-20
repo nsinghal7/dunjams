@@ -52,6 +52,10 @@ class Map(InstructionGroup):
 
     def is_square_passable(self, position):
         if 0 <= position[0] < len(self.tiles) and 0 <= position[1] < len(self.tiles[0]):
+            enemies = self.enemy_map.get(tuple(position), [])
+            for enemy in enemies:
+                if not enemy.is_passable():
+                    return False
             return self.tiles[position[0]][position[1]].is_passable()
         else:
             print('outside of map')

@@ -41,7 +41,7 @@ class Enemy(Entity):
         pixel_pos = self.map.tile_to_pixels(self.pos)
 
         self.sprites = desc["sprites"]
-        if self.is_enemy_pacified(self.id):
+        if self.is_pacified():
             sprite = desc["sprites"]["pacified"]
         else:
             sprite = desc["sprites"]["angry"]
@@ -53,7 +53,7 @@ class Enemy(Entity):
     # return the next projectile, or None if no projectile is being created
     def get_projectile(self):
         next_attack = self.actions.get_next_attack()
-        if (not self.is_enemy_pacified(self.id)) and next_attack != '':
+        if (not self.is_pacified()) and next_attack != '':
             p_pos = np.array(self.pos)
             return Projectile(p_pos, next_attack, self.map, self.sprites["projectile"])
         return None
@@ -71,7 +71,7 @@ class Enemy(Entity):
         self.graphic.set_position(self.pos)
 
         # update the sprite to a pacified or angry one
-        if self.is_enemy_pacified(self.id):
+        if self.is_pacified():
             self.graphic.set_sprite(self.sprites["pacified"])
         else:
             self.graphic.set_sprite(self.sprites["angry"])
@@ -86,6 +86,13 @@ class Enemy(Entity):
         # add the enemy to the map so it knows where they are
         # using its add_enemy(self, position, enemy):
         map.add_enemy(self.pos, self)
+
+    def is_pacified(self):
+        return self.is_enemy_pacified(self.id)
+
+    def is_passable(self):
+        # once pacified, the player cannot accidentally run into a pacified enemy and get killed
+        return not self.is_pacified()
 
     def on_update(self, dt=None):
         self.projectiles.on_update()
@@ -182,6 +189,9 @@ class Projectile(Entity):
         self.bouncing = True
         self.bounce_prog = 0
         map.add_enemy(next_pos, self)
+
+    def is_passable(self):
+        return True
 
     def on_update(self, dt=None):
         dt = kivyClock.frametime
