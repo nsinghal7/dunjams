@@ -61,7 +61,6 @@ class EnemyGroup(InstructionGroup):
 
         self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
 
-<<<<<<< HEAD
     def on_beat(self, map, music, movement):
         # check if player sang correct note (or if no note was required)
         # TODO: check if player doesn't sing a note when none is required
@@ -76,14 +75,6 @@ class EnemyGroup(InstructionGroup):
 
         if self.melody_progress >= len(self.melody):
             self.melody_complete = True
-=======
-    def on_half_beat(self, map, music):
-        if self.melody[self.melody_index] == 0 or (music.is_pitch() and
-                    music.get_midi() == self.melody[self.melody_index]):
-            self.melody_progress += 1 # correct pitch
-        else:
-            self.melody_progress = 0 # incorrect
->>>>>>> 1a634e30cf9b3ca6cfcb644bc09bd933d0166983
 
         self.melody_index = (self.melody_index + 1) % len(self.melody)
 
