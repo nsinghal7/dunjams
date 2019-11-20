@@ -1,3 +1,6 @@
+import os
+os.environ['KIVY_IMAGE'] = 'sdl2'
+
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
@@ -65,6 +68,12 @@ class Enemy(Entity):
         # self.graphic.pos = self.map.tile_to_pixels(self.pos)
         self.graphic.set_position(self.pos)
 
+        # update the sprite to a pacified or angry one
+        if self.is_enemy_pacified(self.id):
+            self.graphic.set_sprite(self.sprites["pacified"])
+        else:
+            self.graphic.set_sprite(self.sprites["angry"])
+
         projectile = self.get_projectile()
         if projectile != None:
             self.projectiles.add(projectile)
@@ -101,6 +110,7 @@ class EnemyGraphic(EntityGraphic):
 
     def set_sprite(self, sprite):
         self.sprite = sprite
+        self.rect.source = sprite
 
     def on_update(self, dt=None):
         dt = kivyClock.frametime

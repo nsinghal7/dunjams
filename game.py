@@ -8,6 +8,7 @@ from common.clock import SimpleTempoMap, AudioScheduler, kTicksPerQuarter, quant
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
+from kivy.core.window import Window
 from kivy.clock import Clock as kivyClock
 
 from map import Map
@@ -17,11 +18,9 @@ from player import Player
 from enemy_group import EnemyGroup, enemy_groups_from_spec
 from beat_bar import BeatBar
 from pitch_bar import PitchBar
+from config import EPSILON_BEFORE, EPSILON_AFTER, HALF_BEAT_TICKS
 
 WORLD = "data/basic_world"
-EPSILON_BEFORE_TICKS = 40
-EPSILON_AFTER_TICKS = 140
-HALF_BEAT_TICKS = 240
 
 MAP_WIDTH_RATIO = 1
 MAP_HEIGHT_RATIO = .8
@@ -32,7 +31,9 @@ class SplashScreen(InstructionGroup):
     def __init__(self, splash_name, audio, game):
         super(SplashScreen, self).__init__()
         self.game = game
-        # TODO draw self
+        self.rect = Rectangle(pos=(0, 0), size=Window.size)
+        self.rect.source = "data/sprites/" + splash_name
+        self.add(self.rect)
 
     def unload(self):
         # TODO: clean up anything that needs cleaning up before this splash screen can
@@ -43,7 +44,7 @@ class SplashScreen(InstructionGroup):
         self.game.next_screen()
 
     def on_update(self):
-        pass
+        self.rect.size = Window.size
 
 class Level(InstructionGroup):
     def __init__(self, level_name, audio, music_controller, movement_controller, game):
@@ -51,10 +52,15 @@ class Level(InstructionGroup):
         self.game = game
         self.audio = audio
         self.mixer = Mixer()
-        self.tempo_map = SimpleTempoMap(120) #TODO load from level spec
+        with open(WORLD + "/" + level_name + "/tempo.txt") as f:
+            self.tempo_map = SimpleTempoMap(int(f.readline().strip()))
         self.sched = AudioScheduler(self.tempo_map)
         self.audio.set_generator(self.sched)
         self.sched.set_generator(self.mixer)
+
+        self.bg_music_file = WaveFile(WORLD + "/" + level_name + "/background.wav")
+        self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=True)
+        self.mixer.add(self.bg_music_gen)
 
         self.music_controller = music_controller
         self.movement_controller = movement_controller
@@ -78,10 +84,10 @@ class Level(InstructionGroup):
         self.player = Player(self.map)
         self.add(self.player)
 
-        now = self.sched.get_tick()
-        next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
-        next_pre_beat = next_beat - EPSILON_BEFORE_TICKS
-        next_post_beat = next_beat + EPSILON_AFTER_TICKS
+
+        next_beat = 0 # we know scheduler time is 0
+        next_pre_beat = next_beat - self.tempo_map.dt_to_tick(EPSILON_BEFORE)
+        next_post_beat = next_beat + self.tempo_map.dt_to_tick(EPSILON_AFTER)
         next_half_beat = next_beat + HALF_BEAT_TICKS
 
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
@@ -193,7 +199,7 @@ class Game(BaseWidget):
 
     def next_screen(self):
         self.unload_screen()
-        self.screen_index += 1
+        self.screen_index = (self.screen_index + 1) % len(self.screens)
         self.load_screen()
 
     def on_update(self):

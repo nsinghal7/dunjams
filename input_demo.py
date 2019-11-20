@@ -29,6 +29,8 @@ import aubio
 
 import numpy as np
 
+from config import SILENCE_THRESHOLD
+
 
 # First-in First-out buffer used for buffering audio data
 class FIFOBuffer(object):
@@ -91,7 +93,7 @@ class PitchDetector(object):
         self.pitch_o = aubio.pitch("yin", 2048, self.buffer_size, Audio.sample_rate)
         self.pitch_o.set_tolerance(.5)
         self.pitch_o.set_unit("midi")
-        self.pitch_o.set_silence(-20)
+        self.pitch_o.set_silence(SILENCE_THRESHOLD)
 
         # buffer allows for always delivering a fixed buffer size to the pitch detector
         self.buffer = FIFOBuffer(self.buffer_size * 8, buf_type=np.float32)
