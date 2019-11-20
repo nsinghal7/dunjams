@@ -8,6 +8,7 @@ from common.clock import SimpleTempoMap, AudioScheduler, kTicksPerQuarter, quant
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
+from kivy.core.window import Window
 from kivy.clock import Clock as kivyClock
 
 from map import Map
@@ -30,7 +31,9 @@ class SplashScreen(InstructionGroup):
     def __init__(self, splash_name, audio, game):
         super(SplashScreen, self).__init__()
         self.game = game
-        # TODO draw self
+        self.rect = Rectangle(pos=(0, 0), size=Window.size)
+        self.rect.source = "data/sprites/" + splash_name
+        self.add(self.rect)
 
     def unload(self):
         # TODO: clean up anything that needs cleaning up before this splash screen can
@@ -41,7 +44,7 @@ class SplashScreen(InstructionGroup):
         self.game.next_screen()
 
     def on_update(self):
-        pass
+        self.rect.size = Window.size
 
 class Level(InstructionGroup):
     def __init__(self, level_name, audio, music_controller, movement_controller, game):
@@ -182,7 +185,7 @@ class Game(BaseWidget):
 
     def next_screen(self):
         self.unload_screen()
-        self.screen_index += 1
+        self.screen_index = (self.screen_index + 1) % len(self.screens)
         self.load_screen()
 
     def on_update(self):
