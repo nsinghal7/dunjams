@@ -168,14 +168,13 @@ class Level(InstructionGroup):
         if self.restart_pause_time_remaining > 0:
             # player can't move due to losing recently
             self.restart_pause_time_remaining -= 1
-            print("got here: ", self.player.position)
+            if self.restart_pause_time_remaining == 0:
+                self.player.set_disabled(False)
         else:
             self.player.on_beat(self.map, None, movement)
-            print("moving: ", self.player.position)
 
         # handle game over
         if self.map.is_square_dangerous(self.map.player_location()):
-            print("restarting: ")
             self.restart()
 
         # handle move to next level
@@ -188,6 +187,7 @@ class Level(InstructionGroup):
 
     def restart(self):
         self.player.return_to_start()
+        self.player.set_disabled(True)
         self.restart_pause_time_remaining = RESET_PAUSE_TIME
 
     def unload(self):
