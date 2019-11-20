@@ -44,7 +44,12 @@ class EnemyGroup(InstructionGroup):
                 return []
         # otherwise return a list of enemies whose pacifying note is the current note
         else:
-            return [e.id for e in filter(lambda e: e.note == self.cur_pitch and e.note == self.melody[self.melody_index - 1], self.enemies.objects)]
+            idx = (self.melody_index - 1) % len(self.melody)
+            if idx < len(self.enemies.objects):
+                target = self.enemies.objects[idx]
+                return [target.id] if target.note == self.cur_pitch else []
+            else:
+                return []
 
     # a callback for enemies to see if they're pacified
     def is_enemy_pacified(self, id):
