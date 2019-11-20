@@ -63,6 +63,9 @@ class SimpleTempoMap(object):
         self.bpm = bpm
         self.tick_offset = 0
 
+    def dt_to_tick(self, dt):
+        return int(kTicksPerQuarter * self.bpm * dt / 60)
+
     def time_to_tick(self, time) :
         slope = (kTicksPerQuarter * self.bpm) / 60.
         tick = slope * time + self.tick_offset

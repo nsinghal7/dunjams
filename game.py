@@ -18,7 +18,7 @@ from player import Player
 from enemy_group import EnemyGroup, enemy_groups_from_spec
 from beat_bar import BeatBar
 from pitch_bar import PitchBar
-from config import EPSILON_BEFORE_TICKS, EPSILON_AFTER_TICKS
+from config import EPSILON_BEFORE, EPSILON_AFTER
 
 WORLD = "data/basic_world"
 
@@ -52,10 +52,15 @@ class Level(InstructionGroup):
         self.game = game
         self.audio = audio
         self.mixer = Mixer()
-        self.tempo_map = SimpleTempoMap(120) #TODO load from level spec
+        with open(WORLD + "/" + level_name + "/tempo.txt") as f:
+            self.tempo_map = SimpleTempoMap(int(f.readline().strip()))
         self.sched = AudioScheduler(self.tempo_map)
         self.audio.set_generator(self.sched)
         self.sched.set_generator(self.mixer)
+
+        self.bg_music_file = WaveFile(WORLD + "/" + level_name + "/background.wav")
+        self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=True)
+        self.mixer.add(self.bg_music_gen)
 
         self.music_controller = music_controller
         self.movement_controller = movement_controller
@@ -79,10 +84,9 @@ class Level(InstructionGroup):
         self.player = Player(self.map)
         self.add(self.player)
 
-        now = self.sched.get_tick()
-        next_beat = quantize_tick_up(now, kTicksPerQuarter) + kTicksPerQuarter
-        next_pre_beat = next_beat - EPSILON_BEFORE_TICKS
-        next_post_beat = next_beat + EPSILON_AFTER_TICKS
+        next_beat = 0 # we know scheduler time is 0
+        next_pre_beat = next_beat - self.tempo_map.dt_to_tick(EPSILON_BEFORE)
+        next_post_beat = next_beat + self.tempo_map.dt_to_tick(EPSILON_AFTER)
 
         self.cmd_beat_on = self.sched.post_at_tick(self.beat_on, next_pre_beat)
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, next_beat)
