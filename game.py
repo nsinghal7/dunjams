@@ -104,6 +104,8 @@ class Level(InstructionGroup):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, next_post_beat)
         self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, next_half_beat)
 
+        self.has_performed_beat_off = False
+
         self.enemy_group = None
         self.enemy_group_index = None
         self.update_enemy_group()
@@ -142,12 +144,18 @@ class Level(InstructionGroup):
         self.map.start_new_timestep()
         self.music_controller.beat_on()
         self.movement_controller.beat_on()
+
+        self.has_performed_beat_off = False
         print("beat on")
 
     def beat_on_exact(self, tick, _):
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, tick + kTicksPerQuarter)
         if self.enemy_group is not None:
             self.enemy_group.on_beat_exact()
+            self.enemy_group.on_beat(self.map, None, None)
+
+        if self.movement_controller.is_ready():
+            self.perform_beat_off()
 
     def half_beat(self, tick, _):
         self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, tick + kTicksPerQuarter)
@@ -159,11 +167,15 @@ class Level(InstructionGroup):
 
     def beat_off(self, tick, _):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
+        self.perform_beat_off()
+
+    def perform_beat_off(self):
+        if self.has_performed_beat_off:
+            return # already did it this round
+        self.has_performed_beat_off = True
+
         self.movement_controller.beat_off()
         movement = self.movement_controller.get_movement()
-
-        if self.enemy_group is not None:
-            self.enemy_group.on_beat(self.map, None, movement)
 
         if self.restart_pause_time_remaining > 0:
             # player can't move due to losing recently
@@ -199,7 +211,8 @@ class Level(InstructionGroup):
         self.bg_music_gen.release()
 
     def on_key_down(self, keycode, modifiers):
-        pass
+        if self.movement_controller.is_ready():
+            self.perform_beat_off()
 
     def on_update(self):
         self.map.on_update(kivyClock.frametime) # MUST UPDATE FIRST

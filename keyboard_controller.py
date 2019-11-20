@@ -30,6 +30,14 @@ class KeyboardController(MovementController):
                 return
             self.movement = self.get_delta()
 
+    def is_ready(self):
+        # returns True if there is a known direction even though beat_off hasn't happened
+        if self.active_keys:
+            return True
+        if self.movement[0] == 0 and self.movement[1] == 0:
+            return False
+        return True
+
     def get_delta(self):
         d = self.active_keys[-1] if self.active_keys else None
 
