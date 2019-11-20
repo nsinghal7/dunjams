@@ -65,13 +65,14 @@ class EnemyGroup(InstructionGroup):
         # check if player sang correct note (or if no note was required)
         # TODO: check if player doesn't sing a note when none is required
         # Increment the melody progress for all or nothing groups
-        if self.melody[self.melody_index - 1] == 0 or (music.is_pitch() and
-                        music.get_midi() == self.melody[self.melody_index - 1]):
+        if self.melody[self.melody_index] == 0 or (music.is_pitch() and
+                        music.get_midi() == self.melody[self.melody_index]):
             # correct pitch
             self.melody_progress += 1
         else:
             # messed up! immediately reset progress
             self.melody_progress = 0
+        print(self.melody_progress)
 
         print("melody progress:" + str(self.melody_progress))
         print(self.melody_index)
