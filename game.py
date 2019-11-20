@@ -185,7 +185,7 @@ class Game(BaseWidget):
 
     def next_screen(self):
         self.unload_screen()
-        self.screen_index += 1
+        self.screen_index = (self.screen_index + 1) % len(self.screens)
         self.load_screen()
 
     def on_update(self):
