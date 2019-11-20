@@ -5,7 +5,7 @@
           "init_pos": [2, 2],
           "motions": [[0, 1], [0, -1]],
           "attacks": ["u", ""],
-          "note": 60,
+          "note": -1,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
             "pacified": "./data/sprites/happy_enemy.PNG",

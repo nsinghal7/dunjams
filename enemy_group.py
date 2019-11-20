@@ -23,8 +23,10 @@ class EnemyGroup(InstructionGroup):
         self.type = description["pacify"] # this will be either 'individual' or 'all'
         self.melody_progress = 0 # how many correct notes in a row, used for pacifying all of them
         self.melody_index = 0 # index of next note to expect/play
+        self.melody_complete = False # for 'all' type groups, keep track if the whole melody is completed
 
         self.cur_pitch = None
+
 
         self.enemies = AnimGroup()
         self.projectiles = AnimGroup()
@@ -38,11 +40,10 @@ class EnemyGroup(InstructionGroup):
     def get_pacified_enemies(self):
         # if all the enemies have to be pacified at once
         if self.type == "all":
-            if self.melody_progress >= len(self.melody):
+            if self.melody_complete:
                 # return all the IDs if the melody has been completed
-                return range(len(self.enemies.objects))
+                return [e.id for e in self.enemies.objects]
             else:
-                # return an empty list otherwise
                 return []
         # otherwise return a list of enemies whose pacifying note is the current note
         else:
@@ -64,13 +65,17 @@ class EnemyGroup(InstructionGroup):
         # check if player sang correct note (or if no note was required)
         # TODO: check if player doesn't sing a note when none is required
         # Increment the melody progress for all or nothing groups
-        if self.melody[self.melody_index] == 0 or (music.is_pitch() and
-                        music.get_midi() == self.melody[self.melody_index]):
+        if self.melody[self.melody_index - 1] == 0 or (music.is_pitch() and
+                        music.get_midi() == self.melody[self.melody_index - 1]):
             # correct pitch
             self.melody_progress += 1
         else:
             # messed up! immediately reset progress
             self.melody_progress = 0
+
+        if self.melody_progress >= len(self.melody):
+            self.melody_complete = True
+
         self.melody_index = (self.melody_index + 1) % len(self.melody)
 
         # Set the current pitch for the group

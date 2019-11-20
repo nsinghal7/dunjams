@@ -2,9 +2,9 @@
     "enemies": [
         {
           "id": 0,
-          "init_pos": [1, 2],
-          "motions": [[0, 0]],
-          "attacks": ["d"],
+          "init_pos": [5, 12],
+          "motions": [[0, 0], [0, 0]],
+          "attacks": ["u", ""],
           "note": 60,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
@@ -14,33 +14,9 @@
         },
         {
           "id": 1,
-          "init_pos": [1, 3],
+          "init_pos": [2, 13],
           "motions": [[0, 0]],
-          "attacks": ["d"],
-          "note": 62,
-          "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
-            "projectile": "./data/sprites/note_proj_transp.PNG"
-          }
-        },
-        {
-          "id": 2,
-          "init_pos": [1, 4],
-          "motions": [[0, 0]],
-          "attacks": ["d"],
-          "note": 64,
-          "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
-            "projectile": "./data/sprites/note_proj_transp.PNG"
-          }
-        },
-        {
-          "id": 3,
-          "init_pos": [1, 5],
-          "motions": [[0, 0]],
-          "attacks": ["d"],
+          "attacks": ["", "d"],
           "note": 62,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
@@ -49,8 +25,45 @@
           }
         }
       ],
-    "melody": [60, 62, 64, 62],
-    "durations": [2, 2, 2, 2],
+    "melody": [60, 62],
+    "durations": [2, 2],
     "pacify": "individual",
-    "bpm": 124
+    "bpm": 124,
+    "center": [5, 13],
+    "sound_thresh": 5,
+    "mel_thresh": 3
+},{
+    "enemies": [
+        {
+          "id": 0,
+          "init_pos": [4, 26],
+          "motions": [[0, 0], [0, 0]],
+          "attacks": ["", "l"],
+          "note": 64,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 1,
+          "init_pos": [5, 24],
+          "motions": [[0, 0]],
+          "attacks": ["u", ""],
+          "note": 67,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy.PNG",
+            "pacified": "./data/sprites/happy_enemy.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        }
+      ],
+    "melody": [64, 67],
+    "durations": [2, 2],
+    "pacify": "individual",
+    "bpm": 124,
+    "center": [4, 25],
+    "sound_thresh": 5,
+    "mel_thresh": 3
 }]
