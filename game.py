@@ -75,7 +75,7 @@ class Level(InstructionGroup):
 
         self.map = Map(WORLD + "/" + level_name + "/map.txt", MAP_WIDTH_RATIO, MAP_HEIGHT_RATIO)
         self.add(self.map)
-        self.pitch_bar = PitchBar(55, MAP_WIDTH_RATIO, 1 - MAP_HEIGHT_RATIO)
+        self.pitch_bar = PitchBar(57, MAP_WIDTH_RATIO, 1 - MAP_HEIGHT_RATIO)
         self.add(self.pitch_bar)
         #self.beat_bar = BeatBar(1, 1 - MAP_HEIGHT_RATIO)
         #self.add(self.beat_bar)

@@ -35,10 +35,17 @@ class EnemyGroup(InstructionGroup):
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):
-        # if all the enemies have to be pacified at once
-        if self.type == "all" and self.melody_complete:
+        if self.type == "all":
+            # if all the enemies have to be pacified at once
+            if self.melody_complete:
                 # return all the IDs if the melody has been completed
                 return [e.id for e in self.enemies.objects]
+            else:
+                result = []
+                idx = (self.melody_index - 1) % len(self.melody)
+                for i in range(self.melody_progress):
+                    result.append(self.enemies.objects[idx - i].id)
+                return result
         # otherwise return a list of enemies whose pacifying note is the current note
         else:
             idx = (self.melody_index - 1) % len(self.melody)
