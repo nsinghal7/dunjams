@@ -152,6 +152,8 @@ class Level(InstructionGroup):
         self.sched.remove(self.cmd_beat_off)
         self.sched.remove(self.cmd_beat_on)
         self.sched.remove(self.cmd_beat_on_exact)
+        self.sched.remove(self.cmd_bg_music_reset)
+        self.bg_music_gen.release()
 
     def on_key_down(self, keycode, modifiers):
         pass
