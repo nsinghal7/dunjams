@@ -20,7 +20,6 @@ class EnemyGroup(InstructionGroup):
         self.melody_complete = is_pacified
 
         self.cur_pitch = None
-        self.has_gotten_correct_pitch = False
 
 
         self.enemies = AnimGroup()
@@ -40,12 +39,9 @@ class EnemyGroup(InstructionGroup):
         print("self.melody__index: " + str(self.melody_index))
         print("self.melody" + str(self.melody))
         # if all the enemies have to be pacified at once
-        if self.type == "all":
-            if self.melody_complete:
+        if self.type == "all" and self.melody_complete:
                 # return all the IDs if the melody has been completed
                 return [e.id for e in self.enemies.objects]
-            else:
-                return []
         # otherwise return a list of enemies whose pacifying note is the current note
         else:
             return [e.id for e in filter(lambda e: e.note == self.cur_pitch and e.note == self.melody[self.melody_index - 1], self.enemies.objects)]
@@ -71,12 +67,10 @@ class EnemyGroup(InstructionGroup):
                         music.get_midi() == self.melody[self.melody_index]):
             # correct pitch
             self.melody_progress += 1
-            self.has_gotten_correct_pitch = True
 
         else:
             # messed up! immediately reset progress
             self.melody_progress = 0
-            self.has_gotten_correct_pitch = False
 
         if self.melody_progress >= len(self.melody):
             self.melody_complete = True
@@ -89,19 +83,6 @@ class EnemyGroup(InstructionGroup):
             enemy.on_half_beat(map, music)
 
     def on_beat(self, map, music, movement):
-        if not self.has_gotten_correct_pitch:
-            if self.melody[self.melody_index] == 0 or (music != None and music.is_pitch() and
-                            music.get_midi() == self.melody[self.melody_index]):
-                # correct pitch
-                self.melody_progress += 1
-
-            if music != None and music.is_pitch():
-                self.cur_pitch = music.get_midi()
-                print("pitch:" + str(self.cur_pitch))
-
-
-        self.has_gotten_correct_pitch = False
-
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
 

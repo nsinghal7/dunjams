@@ -64,7 +64,7 @@
           "init_pos": [2, 15],
           "motions": [[0, 0]],
           "attacks": ["d"],
-          "note": -1,
+          "note": 64,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
             "pacified": "./data/sprites/happy_enemy.PNG",
@@ -76,7 +76,7 @@
           "init_pos": [2, 16],
           "motions": [[0, 0]],
           "attacks": ["d"],
-          "note": -1,
+          "note": 62,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
             "pacified": "./data/sprites/happy_enemy.PNG",
@@ -88,7 +88,7 @@
           "init_pos": [3, 18],
           "motions": [[0, 0]],
           "attacks": ["l"],
-          "note": -1,
+          "note": 67,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
             "pacified": "./data/sprites/happy_enemy.PNG",
@@ -100,7 +100,7 @@
           "init_pos": [4, 18],
           "motions": [[0, 0]],
           "attacks": ["l"],
-          "note": -1,
+          "note": 67,
           "sprites": {
             "angry": "./data/sprites/angry_enemy.PNG",
             "pacified": "./data/sprites/happy_enemy.PNG",
