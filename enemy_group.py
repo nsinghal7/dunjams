@@ -35,9 +35,6 @@ class EnemyGroup(InstructionGroup):
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):
-        print("pitch:" + str(self.cur_pitch))
-        print("self.melody__index: " + str(self.melody_index))
-        print("self.melody" + str(self.melody))
         # if all the enemies have to be pacified at once
         if self.type == "all" and self.melody_complete:
                 # return all the IDs if the melody has been completed
@@ -69,7 +66,7 @@ class EnemyGroup(InstructionGroup):
         # Increment the melody progress for all or nothing groups
 
         if self.melody[self.melody_index] == 0 or (music.is_pitch() and
-                        music.get_midi() == self.melody[self.melody_index]):
+                        music.get_midi() == self.melody[self.melody_index - 1]):
             # correct pitch
             self.melody_progress += 1
 
@@ -77,12 +74,13 @@ class EnemyGroup(InstructionGroup):
             # messed up! immediately reset progress
             self.melody_progress = 0
 
+        print("melody_progress:" + str(self.melody_progress))
+
         if self.melody_progress >= len(self.melody):
             self.melody_complete = True
 
         if music.is_pitch():
             self.cur_pitch = music.get_midi()
-            print("pitch:" + str(self.cur_pitch))
 
         for enemy in self.enemies.objects:
             enemy.on_half_beat(map, music)
