@@ -30,6 +30,12 @@ class EnemyGroup(InstructionGroup):
 
         self.pitch_bar = pitch_bar
 
+    def is_player_in_song_threshold(self):
+        return True # TODO
+
+    def is_player_in_melody_threshold(self):
+        return True # TODO
+
     def is_group_pacified(self):
         return self.melody_complete
 
@@ -61,7 +67,7 @@ class EnemyGroup(InstructionGroup):
 
     def on_beat_exact(self):
         # play melody exactly on the beat so it doesn't sound weird
-        note = NoteGenerator(self.melody[self.melody_index], .3)
+        note = NoteGenerator(self.melody[self.melody_index], .6)
         env = Envelope(note, .02, 1, .3, 1)
         self.mixer.add(env)
 
