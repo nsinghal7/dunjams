@@ -31,12 +31,13 @@ class Map(InstructionGroup):
                 self.add(tile)
 
         # initialize per-timestep variables
+        self.player_loc = self.player_start_loc
         self.start_new_timestep()
 
     def start_new_timestep(self):
         self.enemy_map = {}
-        self.player_loc = None
-        self.player = None
+        # don't reset player loc so that there is still a valid loc eventually
+        # self.player_loc = None
 
     def add_enemy(self, position, enemy):
         # TODO: maybe force projectiles to die?

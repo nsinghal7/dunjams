@@ -1,3 +1,4 @@
+import numpy as np
 from kivy.graphics.instructions import InstructionGroup
 from kivy.graphics import Color, Ellipse, Line, Rectangle
 from kivy.graphics import PushMatrix, PopMatrix
@@ -10,7 +11,11 @@ from enemy import Enemy
 class EnemyGroup(InstructionGroup):
     def __init__(self, description, map, mixer, pitch_bar, current_beat, is_pacified):
         super(EnemyGroup, self).__init__()
+        self.map = map
         self.mixer = mixer
+        self.center = np.array(description["center"])
+        self.sound_thresh = description["sound_thresh"]
+        self.mel_thresh = description["mel_thresh"]
         enemy_descs = description["enemies"]
         self.melody = description["melody"]
         self.type = description["pacify"] # this will be either 'individual' or 'all'
@@ -30,11 +35,15 @@ class EnemyGroup(InstructionGroup):
 
         self.pitch_bar = pitch_bar
 
-    def is_player_in_song_threshold(self):
-        return True # TODO
+    def player_distance(self):
+        # distance along longer axis from enemy group's center to the player
+        return np.max(np.abs(self.center - self.map.player_location()))
+
+    def is_player_in_sound_threshold(self):
+        return self.player_distance() <= self.sound_thresh
 
     def is_player_in_melody_threshold(self):
-        return True # TODO
+        return self.player_distance() <= self.mel_thresh
 
     def is_group_pacified(self):
         return self.melody_complete
