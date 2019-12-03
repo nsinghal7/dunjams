@@ -82,8 +82,8 @@ class PitchBar(InstructionGroup):
                 self.player_pitch_history = numpy.append(self.player_pitch_history, self.player_pitch)
                 self.player_pitch_history = self.player_pitch_history[1:]
 
-            # self.smooth_pitch = self.player_pitch_history
-            self.smooth_pitch = smooth(self.player_pitch_history, window_len=self.player_pitch_history.shape[0], window="blackman")
+            self.smooth_pitch = self.player_pitch_history
+            # self.smooth_pitch = smooth(self.player_pitch_history, window_len=self.player_pitch_history.shape[0], window="blackman")
 
 
         def set_key_color(self, index, rgb=None):

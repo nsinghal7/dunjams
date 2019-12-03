@@ -7,8 +7,8 @@
           "attacks": ["d"],
           "note": 60,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -19,8 +19,8 @@
           "attacks": ["d"],
           "note": 62,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -31,8 +31,8 @@
           "attacks": ["d"],
           "note": 64,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -43,8 +43,8 @@
           "attacks": ["d"],
           "note": 62,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         }
@@ -66,8 +66,8 @@
           "attacks": ["d"],
           "note": 64,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -78,8 +78,8 @@
           "attacks": ["d"],
           "note": 62,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -90,8 +90,8 @@
           "attacks": ["l"],
           "note": 67,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -102,8 +102,8 @@
           "attacks": ["l"],
           "note": 67,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         }
