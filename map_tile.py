@@ -7,13 +7,26 @@ EMPTY = " "
 PLAYER_START = "p"
 EXIT = "e"
 WALL = "w"
+SIDE_WALL = "s"
+SIDE_WALL2 = "2"
+CORNER_L = "l"
+CORNER_R = "r"
+VACUUM = "v"
+CORNER_LI = "c"
+CORNER_RI = "i"
 
 VALID_TILES = [EMPTY, PLAYER_START, EXIT, WALL]
 
 SPRITE_MAP = {
-    WALL: 'br_wall',
+    WALL: 'wall_wall.png',
     EMPTY: 'sq_fl',
-    EXIT: 'ladder.png'
+    EXIT: 'ladder.png',
+    SIDE_WALL: 'side_wall.png',
+    SIDE_WALL2: 'side_wall2.png',
+    CORNER_L: 'corner_l.png',
+    CORNER_R: 'corner_r.png',
+    CORNER_LI: 'corner_l_inner.png',
+    CORNER_RI: 'corner_r_inner.png'
 }
 
 SPRITE_PREFIX = './data/sprites/'
@@ -31,7 +44,7 @@ class MapTile(InstructionGroup):
         location = self.map.tile_to_pixels(self.position)
 
         if kind == EMPTY:
-            self.color = Color(0.5, 0.5, 0.5)
+            self.color = Color(0.5, 0.5, 0.6)
             self.add(self.color)
             self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind] + str(randint(1, 4)) + '.png'
 
@@ -41,10 +54,17 @@ class MapTile(InstructionGroup):
             self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind]
 
         elif kind == WALL:
-            self.add(Color(0.4, 0.4, 0.4))
-            # self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind]
+            self.add(Color(1,1,1))
+            self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind]
 
-            self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind] + str(randint(1, 4)) + '.png'
+            # self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind] + str(randint(1, 4)) + '.png'
+
+        elif kind == VACUUM:
+            self.add(Color(0, 0, 0))
+
+        elif kind in ["s", "2", "l", "r", "c", "i"]:
+            self.add(Color(1, 1, 1))
+            self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind]
         else:
             raise Exception("Cannot draw tile with name: %s" % kind)
 

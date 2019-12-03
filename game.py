@@ -89,7 +89,7 @@ class Level(InstructionGroup):
         self.music_controller = music_controller
         self.movement_controller = movement_controller
 
-        self.map = Map(WORLD + "/" + level_name + "/map.txt", MAP_WIDTH_RATIO, MAP_HEIGHT_RATIO)
+        self.map = Map(WORLD + "/" + level_name + "/advanced_map.txt", MAP_WIDTH_RATIO, MAP_HEIGHT_RATIO)
         self.add(self.map)
         self.pitch_bar = PitchBar(57, MAP_WIDTH_RATIO, 1 - MAP_HEIGHT_RATIO)
         self.add(self.pitch_bar)
