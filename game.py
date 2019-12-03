@@ -31,11 +31,27 @@ MAP_HEIGHT_RATIO = .8
 
 RESET_PAUSE_TIME = 2
 
+SPLASH_WIDTH_TO_HEIGHT = 16/9
+
 class SplashScreen(InstructionGroup):
     def __init__(self, splash_name, audio, game):
         super(SplashScreen, self).__init__()
         self.game = game
-        self.rect = Rectangle(pos=(0, 0), size=Window.size)
+
+        potential_width = Window.height * SPLASH_WIDTH_TO_HEIGHT
+        potential_height = Window.width / SPLASH_WIDTH_TO_HEIGHT
+
+        if potential_width > Window.width:
+            img_size = (Window.width, potential_height)
+            img_pos = (0, (Window.height - potential_height) / 4)
+        else:
+            img_size = (potential_width, Window.height)
+            img_pos = ((Window.width - potential_width) / 2, 0)
+
+        print('splash screen size: ' + str(img_size))
+        print('splash screen position: ' + str(img_pos))
+        print('window size: ' + str(Window.size))
+        self.rect = Rectangle(pos=img_pos, size=img_size)
         self.rect.source = "data/sprites/" + splash_name
         self.add(self.rect)
 
@@ -156,6 +172,8 @@ class Level(InstructionGroup):
         self.has_performed_beat_off = False
         if self.movement_controller.is_ready():
             self.perform_beat_off()
+
+        # self.player.on_beat_exact()
 
     def half_beat(self, tick, _):
         self.cmd_half_beat = self.sched.post_at_tick(self.half_beat, tick + kTicksPerQuarter)
