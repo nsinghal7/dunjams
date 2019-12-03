@@ -74,7 +74,7 @@ class MapTile(InstructionGroup):
         self.add(self.rect)
 
     def is_passable(self):
-        return self.kind != WALL
+        return self.kind not in [WALL, SIDE_WALL, SIDE_WALL2, CORNER_R, CORNER_RI, CORNER_L, CORNER_LI]
 
     def is_exit(self):
         return self.kind == EXIT
