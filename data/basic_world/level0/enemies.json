@@ -7,8 +7,8 @@
           "attacks": ["", "u"],
           "note": 60,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -19,8 +19,8 @@
           "attacks": ["d", ""],
           "note": 62,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         }
@@ -30,8 +30,8 @@
     "pacify": "individual",
     "bpm": 124,
     "center": [5, 13],
-    "sound_thresh": 5,
-    "mel_thresh": 3
+    "sound_thresh": 6,
+    "mel_thresh": 2
 },{
     "enemies": [
         {
@@ -41,8 +41,8 @@
           "attacks": ["", "l"],
           "note": 60,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         },
@@ -53,8 +53,8 @@
           "attacks": ["u", ""],
           "note": 62,
           "sprites": {
-            "angry": "./data/sprites/angry_enemy.PNG",
-            "pacified": "./data/sprites/happy_enemy.PNG",
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
             "projectile": "./data/sprites/note_proj_transp.PNG"
           }
         }
@@ -64,6 +64,6 @@
     "pacify": "individual",
     "bpm": 124,
     "center": [4, 25],
-    "sound_thresh": 5,
-    "mel_thresh": 3
+    "sound_thresh": 6,
+    "mel_thresh": 2
 }]

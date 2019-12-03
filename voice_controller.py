@@ -26,7 +26,6 @@ class VoiceController(MusicController):
             if not event.is_noisy():
                 break
         self.music.events = events
-        print(self.music.events)
         return music
 
     # this gets called fairly often (~15 times a beat)

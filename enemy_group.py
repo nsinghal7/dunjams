@@ -50,6 +50,9 @@ class EnemyGroup(InstructionGroup):
 
     # return a list of the IDs of pacified enemies
     def get_pacified_enemies(self):
+        # nobody is angry if you're outside the melody threshold
+        if not self.is_player_in_melody_threshold():
+            return [e.id for e in self.enemies.objects]
         if self.type == "all":
             # if all the enemies have to be pacified at once
             if self.melody_complete:
@@ -75,10 +78,24 @@ class EnemyGroup(InstructionGroup):
         return id in self.get_pacified_enemies()
 
     def on_beat_exact(self):
-        # play melody exactly on the beat so it doesn't sound weird
-        note = NoteGenerator(self.melody[self.melody_index], .6)
-        env = Envelope(note, .02, 1, .3, 1)
-        self.mixer.add(env)
+        # player is far away, enemies passive
+        if not self.is_player_in_sound_threshold():
+            for e in self.enemies.objects:
+                e.set_color(0, 0.8, 0)
+        # player is previewing the enemies
+        elif self.is_player_in_sound_threshold() and not self.is_player_in_melody_threshold():
+            for e in self.enemies.objects:
+                e.set_color(0, 0.9, 0)
+            # play melody exactly on the beat so it doesn't sound weird
+            note = NoteGenerator(self.melody[self.melody_index], .6, timbre="square")
+            env = Envelope(note, .02, 1, .5, 1)
+            self.mixer.add(env)
+
+            # color the correct enemy
+            idx = (self.melody_index) % len(self.melody)
+            if idx < len(self.enemies.objects):
+                target = self.enemies.objects[idx]
+                target.set_color(0.75, 0.9, self.pitch_bar.base_midi)
 
         self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
 
@@ -103,6 +120,12 @@ class EnemyGroup(InstructionGroup):
 
         if music.is_pitch():
             self.cur_pitch = music.get_midi()
+
+        if self.is_player_in_melody_threshold():
+            for e in self.enemies.objects:
+                e.set_color(0, 1, self.pitch_bar.base_midi)
+            for eid in self.get_pacified_enemies():
+                self.enemies.objects[eid].set_color(1, 1,self.pitch_bar.base_midi)
 
         for enemy in self.enemies.objects:
             enemy.on_half_beat(map, music)

@@ -94,6 +94,11 @@ class Enemy(Entity):
         # once pacified, the player cannot accidentally run into a pacified enemy and get killed
         return not self.is_pacified()
 
+    def set_color(self, s, v, base_midi):
+        hue = ((self.note - base_midi) % 12) / 12
+        rgba = Color(hue, s, v, mode='hsv').rgba
+        self.graphic.set_color(rgba)
+
     def on_update(self, dt=None):
         self.projectiles.on_update()
         return self.graphic.on_update()
@@ -105,8 +110,9 @@ class EnemyGraphic(EntityGraphic):
         self.pos = init_pos
         self.next_pos = self.pos
         self.map = map
+        self.color = Color(rgba=(1,1,1,0))
 
-        self.add(Color())
+        self.add(self.color)
 
         if sprite:
             self.rect = Rectangle(pos=self.map.tile_to_pixels(self.pos), size=map.tile_size(), source=sprite)
@@ -120,6 +126,9 @@ class EnemyGraphic(EntityGraphic):
     def set_sprite(self, sprite):
         self.sprite = sprite
         self.rect.source = sprite
+
+    def set_color(self, color):
+        self.color.rgba = color
 
     def on_update(self, dt=None):
         dt = kivyClock.frametime

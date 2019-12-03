@@ -9,6 +9,7 @@ class PitchBar(InstructionGroup):
             super(PitchBar, self).__init__()
 
             self.base_midi = base_midi
+            print(base_midi)
             self.width_ratio = width_ratio
             self.height_ratio = height_ratio * 0.7
 
@@ -88,7 +89,7 @@ class PitchBar(InstructionGroup):
         def set_key_color(self, index, rgb=None):
             if index is not None:
                 if rgb is None:
-                    rgb = Color(index / 13, 1, 1, mode='hsv').rgba
+                    rgb = Color(index / 12, 1, 1, mode='hsv').rgba
                 self.key_colors[index].rgb = rgb
 
         def get_index(self, midi):
