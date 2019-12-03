@@ -78,7 +78,7 @@ class PitchBar(InstructionGroup):
             if midi == 0:
                 self.player_pitch = None
             else:
-                self.player_pitch = (midi - self.base_midi) % 12
+                self.player_pitch = (midi - (self.base_midi - 0.5)) % 12 - 0.5
                 self.player_pitch_history = numpy.append(self.player_pitch_history, self.player_pitch)
                 self.player_pitch_history = self.player_pitch_history[1:]
 
