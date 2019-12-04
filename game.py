@@ -27,7 +27,8 @@ WORLD = "data/basic_world"
 MAP_WIDTH_RATIO = 1
 MAP_HEIGHT_RATIO = .8
 
-RESET_PAUSE_TIME = 2
+RESET_PAUSE_TIME = 2 # total time spent between death and moving again
+RESET_MOVE_BACK_TIME = 1 # time at which the player moves back to start
 
 SPLASH_WIDTH_TO_HEIGHT = 16/9
 
@@ -139,6 +140,8 @@ class Level(InstructionGroup):
             eg.on_beat_exact()
             eg.on_beat(self.map, None, None)
 
+        self.player.on_beat_exact()
+
         self.has_performed_beat_off = False
         if self.movement_controller.is_ready():
             self.perform_beat_off()
@@ -168,23 +171,24 @@ class Level(InstructionGroup):
         if self.restart_pause_time_remaining > 0:
             # player can't move due to losing recently
             self.restart_pause_time_remaining -= 1
-            if self.restart_pause_time_remaining == 0:
+            if self.restart_pause_time_remaining == RESET_MOVE_BACK_TIME:
+                self.player.return_to_start()
+            elif self.restart_pause_time_remaining == 0:
                 self.player.set_disabled(False)
         else:
             self.player.on_beat(self.map, None, movement)
 
-        # handle game over
-        if self.map.is_square_dangerous(self.map.player_location()):
-            self.restart()
+            # handle game over
+            if self.map.is_square_dangerous(self.map.player_location()):
+                self.restart()
 
-        # handle move to next level
-        if self.map.is_player_at_exit():
-            self.game.next_screen()
+            # handle move to next level
+            if self.map.is_player_at_exit():
+                self.game.next_screen()
 
         print("beat off")
 
     def restart(self):
-        self.player.return_to_start()
         self.player.set_disabled(True)
         self.restart_pause_time_remaining = RESET_PAUSE_TIME
 

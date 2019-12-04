@@ -20,6 +20,9 @@ class Player(Entity):
         self.graphic = PlayerGraphic(self.position, map)
         self.draw_graphics()
 
+    def on_beat_exact(self):
+        self.graphic.start_bounce()
+
     def on_beat(self, map, music, movement):
         delta = movement
 
@@ -66,11 +69,13 @@ class PlayerGraphic(EntityGraphic):
             return 2 * self.bounce_prog ** 2 - 2 * self.bounce_prog
         return self.bounce_prog ** 2 - self.bounce_prog
 
+    def start_bounce(self):
+        self.bouncing = True
+        self.bounce_prog = 0
+
     def set_position(self, position):
         self.old_position = self.goal_position
         self.goal_position = np.array(position)
-        self.bouncing = True
-        self.bounce_prog = 0
 
     def set_disabled(self, is_disabled):
         if is_disabled:
