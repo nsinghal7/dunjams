@@ -83,10 +83,8 @@ class Level(InstructionGroup):
         self.sched.set_generator(self.mixer)
 
         self.bg_music_file = WaveFile(WORLD + "/" + level_name + "/background.wav")
-        self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=False) # we loop explicitly
-        self.mixer.add(self.bg_music_gen)
-        self.cmd_bg_music_reset = self.sched.post_at_tick(self.bg_music_reset,
-                            kTicksPerQuarter * self.bg_music_beats_per_loop)
+        self.bg_music_gen = None
+        self.bg_music_reset(0, None) # start music now
 
         self.music_controller = music_controller
         self.movement_controller = movement_controller
@@ -128,8 +126,10 @@ class Level(InstructionGroup):
     def bg_music_reset(self, tick, _):
         self.cmd_bg_music_reset = self.sched.post_at_tick(self.bg_music_reset,
                                     tick + kTicksPerQuarter * self.bg_music_beats_per_loop)
-        self.bg_music_gen.release()
+        if self.bg_music_gen:
+            self.bg_music_gen.release()
         self.bg_music_gen = WaveGenerator(self.bg_music_file, loop=False) # we loop it explicitly
+        self.bg_music_gen.set_gain(3.0)
         self.mixer.add(self.bg_music_gen)
 
     def beat_on(self, tick, _):
