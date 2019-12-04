@@ -89,22 +89,22 @@ class EnemyGroup(InstructionGroup):
         if not self.is_player_in_sound_threshold():
             for e in self.enemies.objects:
                 e.set_color(0, 0.8, 0)
-        # player is previewing the enemies
-        elif self.is_player_in_sound_threshold() and not self.is_player_in_melody_threshold():
-            for e in self.enemies.objects:
-                e.set_color(0, 0.9, 0)
-            # play melody exactly on the beat so it doesn't sound weird
-            note = NoteGenerator(self.melody[self.melody_index], .6, timbre="square")
-            env = Envelope(note, .02, 1, .5, 1)
-            self.mixer.add(env)
+        else:
+            self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
+            if not self.is_player_in_melody_threshold():
+                # player is previewing the enemies
+                for e in self.enemies.objects:
+                    e.set_color(0, 0.9, 0)
+                # play melody exactly on the beat so it doesn't sound weird
+                note = NoteGenerator(self.melody[self.melody_index], .6, timbre="square")
+                env = Envelope(note, .02, 1, .5, 1)
+                self.mixer.add(env)
 
-            # color the correct enemy
-            idx = (self.melody_index) % len(self.melody)
-            if idx < len(self.enemies.objects):
-                target = self.enemies.objects[idx]
-                target.set_color(0.75, 0.9, self.pitch_bar.base_midi)
-
-        self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
+                # color the correct enemy
+                idx = (self.melody_index) % len(self.melody)
+                if idx < len(self.enemies.objects):
+                    target = self.enemies.objects[idx]
+                    target.set_color(0.75, 0.9, self.pitch_bar.base_midi)
 
     def on_half_beat(self, map, music):
         # check if player sang correct note (or if no note was required)
