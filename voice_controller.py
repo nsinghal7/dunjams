@@ -12,12 +12,6 @@ class VoiceController(MusicController):
     def get_music(self):
         #self.music.finalize()
 
-        # print total number of times the voice input is queried
-        total = 0
-        for event in self.music.events:
-            total += event.duration
-        print(total)
-
         music = copy.copy(self.music)
         events = []
         for event in self.music.events[::-1]:
