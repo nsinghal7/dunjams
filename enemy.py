@@ -144,6 +144,7 @@ class EnemyGraphic(EntityGraphic):
             self.pos = self.pos + delta
 
         self.rect.pos = self.map.tile_to_pixels(self.pos)
+        self.rect.size = self.map.tile_size()
 
         return True
 
