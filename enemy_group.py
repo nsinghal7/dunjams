@@ -41,6 +41,7 @@ class EnemyGroup(InstructionGroup):
             self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified, self.is_enemy_shooting))
 
         self.pitch_bar = pitch_bar
+        self.pitch_matched = False # True if matched the pitch this beat already
 
     def player_distance(self):
         # distance along longer axis from enemy group's center to the player
@@ -109,22 +110,19 @@ class EnemyGroup(InstructionGroup):
                     target = self.enemies.objects[idx]
                     target.set_color(0.75, 0.9, self.pitch_bar.base_midi)
 
-    def on_half_beat(self, map, music):
+    def check_note(self, map, music, is_last):
         # check if player sang correct note (or if no note was required)
-        # TODO: check if player doesn't sing a note when none is required
         # Increment the melody progress for all or nothing groups
 
-        if self.is_player_in_melody_threshold():
+        if not self.pitch_matched and self.is_player_in_melody_threshold():
             if self.melody[self.melody_index] == 0 or (music.is_pitch() and
                             music.get_midi() == self.melody[self.melody_index - 1]):
                 # correct pitch
                 self.melody_progress += 1
-
-            else:
-                # messed up! immediately reset progress
+                self.pitch_matched = True
+            elif is_last:
+                # incorrect pitch for all samples, and this is the last one, so we now punish
                 self.melody_progress = 0
-
-            print("melody_progress:" + str(self.melody_progress))
 
             if self.melody_progress >= len(self.melody):
                 self.melody_complete = True
@@ -138,9 +136,11 @@ class EnemyGroup(InstructionGroup):
                 self.enemies.objects[eid].set_color(1, 1,self.pitch_bar.base_midi)
 
         for enemy in self.enemies.objects:
-            enemy.on_half_beat(map, music)
+            enemy.update_sprite(map, music)
 
     def on_beat(self, map, music, movement):
+        self.check_note(map, music, True)
+
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
 
