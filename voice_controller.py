@@ -32,11 +32,6 @@ class VoiceController(MusicController):
     def receive_audio(self, frames, num_channels):
         assert(num_channels == 1)
 
-        '''
-        if self.onbeat:
-            return
-        '''
-
         midi = self.pitch_detector.write(frames)
         cur = self.music.add_pitch(midi)
         if self.pitch_bar:

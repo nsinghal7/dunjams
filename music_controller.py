@@ -1,16 +1,19 @@
 PITCH_SUSTAIN_THRESHOLD = 5
 SUSTAIN_TRAILING_BUFFER = 2
+POP_THRESHOLD = 15
 
 class MusicController(object):
     def __init__(self):
-        self.onbeat = False
+        # self.onbeat = False
         self.pitch_bar = None
 
     def beat_on(self):
-        self.onbeat = True
+        # self.onbeat = True
+        pass
 
     def beat_off(self):
-        self.onbeat = False
+        # self.onbeat = False
+        pass
 
     def get_music(self):
         pass
@@ -89,6 +92,17 @@ class Pitch(Music):
             if not event.is_noisy() and (allow_none or event.value != 0):
                 return event.value
         return 0
+
+    def get_held_midi(self):
+        return self.get_midi() if self.events[-1].duration >= POP_THRESHOLD else 0
+
+    def to_saturation(self, target):
+        if self.get_midi() != target:
+            return 0
+        elif self.events[-1].duration >= POP_THRESHOLD:
+            return 1
+        else:
+            return 0.1 + 0.6 * (self.events[-1].duration / POP_THRESHOLD)
 
 class PitchEvent(MusicEvent):
     pass
