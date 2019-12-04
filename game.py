@@ -140,6 +140,8 @@ class Level(InstructionGroup):
             eg.on_beat_exact()
             eg.on_beat(self.map, None, None)
 
+        self.player.on_beat_exact()
+
         self.has_performed_beat_off = False
         if self.movement_controller.is_ready():
             self.perform_beat_off()
