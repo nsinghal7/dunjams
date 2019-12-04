@@ -64,6 +64,6 @@
     "pacify": "individual",
     "bpm": 124,
     "center": [4, 25],
-    "sound_thresh": 6,
+    "sound_thresh": 5,
     "mel_thresh": 2
 }]
