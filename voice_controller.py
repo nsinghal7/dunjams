@@ -40,12 +40,4 @@ class VoiceController(MusicController):
         midi = self.pitch_detector.write(frames)
         cur = self.music.add_pitch(midi)
         if self.pitch_bar:
-            if cur == 0 or midi == 0:
-                pitch = 0
-            else:
-                d = abs(cur - (60 + int(round(midi)) % 12))
-                if d <= 2 or d >= 10:
-                    pitch = midi
-                else:
-                    pitch = 0
-            self.pitch_bar.on_player_note(pitch)
+            self.pitch_bar.on_player_note(midi)
