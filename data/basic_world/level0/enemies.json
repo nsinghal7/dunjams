@@ -4,7 +4,8 @@
           "id": 0,
           "init_pos": [5, 12],
           "motions": [[0, 0], [0, 0]],
-          "attacks": ["", "u"],
+          "attacks": ["u", "u"],
+          "p_attacks": ["", "u"],
           "note": 60,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -16,7 +17,8 @@
           "id": 1,
           "init_pos": [1, 13],
           "motions": [[0, 0]],
-          "attacks": ["d", ""],
+          "attacks": ["d", "d"],
+          "p_attacks": ["d", ""],
           "note": 62,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -38,7 +40,8 @@
           "id": 0,
           "init_pos": [4, 26],
           "motions": [[0, 0], [0, 0]],
-          "attacks": ["", "l"],
+          "attacks": ["l", "l"],
+          "p_attacks": ["", "l"],
           "note": 60,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -50,7 +53,8 @@
           "id": 1,
           "init_pos": [5, 24],
           "motions": [[0, 0]],
-          "attacks": ["u", ""],
+          "attacks": ["u", "u"],
+          "p_attacks": ["u", ""],
           "note": 62,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
