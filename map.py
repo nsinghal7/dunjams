@@ -83,7 +83,7 @@ class Map(InstructionGroup):
         return len(self.tiles), len(self.tiles[0])
 
     def tile_size(self):
-        size = np.min(Window.size) / 11
+        size = np.min(Window.size) / 15
         return size, size
 
     def tile_to_pixels(self, position):

@@ -32,7 +32,7 @@ class EnemyGroup(InstructionGroup):
         self.melody_complete = False
 
         self.cur_pitch = None
-
+        self.pitch_matched = False # True if matched the pitch this beat already
 
         self.enemies = AnimGroup()
         self.projectiles = AnimGroup()
@@ -41,7 +41,6 @@ class EnemyGroup(InstructionGroup):
             self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified, self.should_p_attack))
 
         self.pitch_bar = pitch_bar
-        self.pitch_matched = False # True if matched the pitch this beat already
 
     def player_distance(self):
         # distance along longer axis from enemy group's center to the player
