@@ -95,11 +95,9 @@ class Level(InstructionGroup):
 
         self.map = Map(WORLD + "/" + level_name + "/advanced_map.txt", MAP_WIDTH_RATIO, MAP_HEIGHT_RATIO)
         self.add(self.map)
-        self.pitch_bar = PitchBar(57, MAP_WIDTH_RATIO, 1 - MAP_HEIGHT_RATIO)
-        self.add(self.pitch_bar)
-        #self.beat_bar = BeatBar(1, 1 - MAP_HEIGHT_RATIO)
-        #self.add(self.beat_bar)
 
+        # pitch bar must be added AFTER enemy groups
+        self.pitch_bar = PitchBar(57, MAP_WIDTH_RATIO, 1 - MAP_HEIGHT_RATIO)
         self.music_controller.pitch_bar = self.pitch_bar
 
         self.restart_pause_time_remaining = 0
@@ -111,6 +109,9 @@ class Level(InstructionGroup):
                                                     self.map, self.mixer, self.pitch_bar)
         for eg in self.enemy_groups:
             self.add(eg)
+
+        # pitch bar must be added last
+        self.add(self.pitch_bar)
 
         next_beat = 0 # we know scheduler time is 0
         next_pre_beat = next_beat - self.tempo_map.dt_to_tick(EPSILON_BEFORE)
