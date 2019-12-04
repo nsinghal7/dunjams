@@ -29,7 +29,7 @@
     "durations": [2, 2],
     "pacify": "individual",
     "bpm": 124,
-    "center": [5, 13],
+    "center": [3, 13],
     "sound_thresh": 6,
     "mel_thresh": 2
 },{
