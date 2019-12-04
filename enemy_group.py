@@ -111,24 +111,24 @@ class EnemyGroup(InstructionGroup):
         # TODO: check if player doesn't sing a note when none is required
         # Increment the melody progress for all or nothing groups
 
-        if self.melody[self.melody_index] == 0 or (music.is_pitch() and
-                        music.get_midi() == self.melody[self.melody_index - 1]):
-            # correct pitch
-            self.melody_progress += 1
-
-        else:
-            # messed up! immediately reset progress
-            self.melody_progress = 0
-
-        print("melody_progress:" + str(self.melody_progress))
-
-        if self.melody_progress >= len(self.melody):
-            self.melody_complete = True
-
-        if music.is_pitch():
-            self.cur_pitch = music.get_midi()
-
         if self.is_player_in_melody_threshold():
+            if self.melody[self.melody_index] == 0 or (music.is_pitch() and
+                            music.get_midi() == self.melody[self.melody_index - 1]):
+                # correct pitch
+                self.melody_progress += 1
+
+            else:
+                # messed up! immediately reset progress
+                self.melody_progress = 0
+
+            print("melody_progress:" + str(self.melody_progress))
+
+            if self.melody_progress >= len(self.melody):
+                self.melody_complete = True
+
+            if music.is_pitch():
+                self.cur_pitch = music.get_midi()
+
             for e in self.enemies.objects:
                 e.set_color(0, 1, self.pitch_bar.base_midi)
             for eid in self.get_pacified_enemies():
