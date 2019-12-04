@@ -1,5 +1,4 @@
 splash logo_screen.PNG
-splash instructions.PNG
+splash better_instructions.PNG
 level level0
-splash hint_all_grps.PNG
 level level2
