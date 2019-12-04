@@ -1,6 +1,6 @@
 splash logo_screen.PNG
-level level3
 splash better_instructions.PNG
 splash instructions_2.PNG
 level level0
 level level2
+level level3

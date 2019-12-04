@@ -1,7 +1,15 @@
-swwwwwww2
-s   ....e
-s   ....2
-s   ....2
-s p ....2
-s   ....2
-lwwwwwwwr
+vvvvvvvvwwwwwew
+vvvvvvvvw     w
+vvvvvvvvw     w
+vvvvwwwww     w
+vvwww......   w
+vvw........   w
+vvw........wwww
+vvw........wvvv
+www........wvvv
+w  ........wvvv
+w  .......wwvvv
+w  .......wvvvv
+w p   wwwwwvvvv
+w     wvvvvvvvv
+wwwwwwwvvvvvvvv

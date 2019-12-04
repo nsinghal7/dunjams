@@ -2,10 +2,10 @@
     "enemies": [
         {
           "id": 0,
-          "init_pos": [4, 5],
+          "init_pos": [11, 9],
           "motions": [[0, 0]],
-          "attacks": ["u", "u"],
-          "p_attacks": ["", "u"],
+          "attacks": ["u", "u", "u", "u", "", "", "", "", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["u", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
           "note": 57,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -15,10 +15,10 @@
         },
         {
           "id": 1,
-          "init_pos": [4, 6],
+          "init_pos": [11, 8],
           "motions": [[0, 0]],
-          "attacks": ["u", "u"],
-          "p_attacks": ["u", ""],
+          "attacks": ["u", "u", "u", "u", "", "", "", "", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "u", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
           "note": 59,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -28,10 +28,10 @@
         },
         {
           "id": 2,
-          "init_pos": [3, 7],
+          "init_pos": [11, 7],
           "motions": [[0, 0]],
-          "attacks": ["l", "l"],
-          "p_attacks": ["l", ""],
+          "attacks": ["u", "u", "u", "u", "", "", "", "", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "", "u", "", "", "", "", "", "", "", "", "", "", "", "", ""],
           "note": 61,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -41,11 +41,167 @@
         },
         {
           "id": 3,
-          "init_pos": [2, 7],
+          "init_pos": [11, 6],
           "motions": [[0, 0]],
-          "attacks": ["l", "l"],
-          "p_attacks": ["", "l"],
+          "attacks": ["u", "u", "u", "u", "", "", "", "", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "", "", "u", "", "", "", "", "", "", "", "", "", "", "", ""],
           "note": 64,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 4,
+          "init_pos": [8, 3],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "r", "r", "r", "r", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "", "", "", "r", "", "", "", "", "", "", "", "", "", "", ""],
+          "note": 66,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 5,
+          "init_pos": [7, 3],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "r", "r", "r", "r", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "", "", "", "", "r", "", "", "", "", "", "", "", "", "", ""],
+          "note": 68,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 6,
+          "init_pos": [6, 3],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "r", "r", "r", "r", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "", "", "", "", "", "r", "", "", "", "", "", "", "", "", ""],
+          "note": 66,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 7,
+          "init_pos": [5, 3],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "r", "r", "r", "r", "", "", "", "", "", "", "", ""],
+          "p_attacks": ["", "", "", "", "", "", "", "r", "", "", "", "", "", "", "", ""],
+          "note": 64,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+                {
+          "id": 8,
+          "init_pos": [4, 5],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "d", "d", "d", "d", "", "", "", ""],
+          "p_attacks": ["d", "", "", "", "", "", "", "", "d", "", "", "", "", "", "", ""],
+          "note": 61,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 9,
+          "init_pos": [4, 6],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "d", "d", "d", "d", "", "", "", ""],
+          "p_attacks": ["", "d", "", "", "", "", "", "", "", "d", "", "", "", "", "", ""],
+          "note": 61,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 10,
+          "init_pos": [4, 7],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "d", "d", "d", "d", "", "", "", ""],
+          "p_attacks": ["", "", "d", "", "", "", "", "", "", "", "d", "", "", "", "", ""],
+          "note": 62,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 11,
+          "init_pos": [4, 8],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "d", "d", "d", "d", "", "", "", ""],
+          "p_attacks": ["", "", "", "d", "", "", "", "", "", "", "", "d", "", "", "", ""],
+          "note": 61,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 12,
+          "init_pos": [6, 10],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "", "", "", "", "l", "l", "l", "l"],
+          "p_attacks": ["", "", "", "", "", "l", "", "", "", "", "", "", "", "", "l", "", "", ""],
+          "note": 59,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 13,
+          "init_pos": [7, 10],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "", "", "", "", "l", "l", "l", "l"],
+          "p_attacks": ["", "", "", "", "", "", "l", "", "", "", "", "", "", "", "", "l", "", ""],
+          "note": 59,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 14,
+          "init_pos": [8, 10],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "", "", "", "", "l", "l", "l", "l"],
+          "p_attacks": ["", "", "", "", "", "", "", "l", "", "", "", "", "", "", "", "", "l", ""],
+          "note": 61,
+          "sprites": {
+            "angry": "./data/sprites/angry_enemy_w.PNG",
+            "pacified": "./data/sprites/happy_enemy_w.PNG",
+            "projectile": "./data/sprites/note_proj_transp.PNG"
+          }
+        },
+        {
+          "id": 15,
+          "init_pos": [9, 10],
+          "motions": [[0, 0]],
+          "attacks": ["", "", "", "", "", "", "", "", "", "", "", "", "l", "l", "l", "l"],
+          "p_attacks": ["", "", "", "", "", "", "", "", "l", "", "", "", "", "", "", "", "", "l"],
+          "note": 59,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
             "pacified": "./data/sprites/happy_enemy_w.PNG",
@@ -53,12 +209,12 @@
           }
         }
       ],
-    "melody": [57, 59, 61, 64],
+    "melody": [57, 59, 61, 64, 66, 68, 66, 64, 61, 61, 62, 61, 59, 59, 61, 59],
     "durations": [2, 2, 2, 2],
     "pacify": "all",
-    "center": [3,6],
-    "sound_thresh": 5,
-    "mel_thresh": 2,
+    "center": [7.5,6.5],
+    "sound_thresh": 100,
+    "mel_thresh": 4,
     "bpm": 232
 }
 ]
