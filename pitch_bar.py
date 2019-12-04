@@ -9,7 +9,7 @@ class PitchBar(InstructionGroup):
             super(PitchBar, self).__init__()
 
             self.base_midi = base_midi
-            # print(base_midi)
+            print(base_midi)
             self.width_ratio = width_ratio
             self.height_ratio = height_ratio * 0.7
 

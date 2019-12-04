@@ -16,7 +16,7 @@ class VoiceController(MusicController):
         total = 0
         for event in self.music.events:
             total += event.duration
-        # print(total)
+        print(total)
 
         music = copy.copy(self.music)
         events = []
