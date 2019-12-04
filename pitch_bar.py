@@ -42,10 +42,10 @@ class PitchBar(InstructionGroup):
             self.enemy_pitch = None
 
             # keep a history of what the player has sung, max 10 pitches
-            self.player_pitch_history = numpy.zeros(10)
+            self.player_pitch_history = numpy.zeros(0)
             self.player_pitch_idx = 0
             # try to get rid of bumps
-            self.smooth_pitch = 0
+            self.smooth_pitch = numpy.zeros(0)
 
             self.create_keys()
             self.on_update()
@@ -77,10 +77,14 @@ class PitchBar(InstructionGroup):
             # self.set_key_color(self.player_pitch)
             if midi == 0:
                 self.player_pitch = None
+                if self.player_pitch_history.shape[0] > 0:
+                    self.player_pitch = self.player_pitch_history[-1]
+                    self.player_pitch_history = self.player_pitch_history[1:]
             else:
                 self.player_pitch = (midi - (self.base_midi - 0.5)) % 12 - 0.5
                 self.player_pitch_history = numpy.append(self.player_pitch_history, self.player_pitch)
-                self.player_pitch_history = self.player_pitch_history[1:]
+                if self.player_pitch_history.shape[0] > 2:
+                    self.player_pitch_history = self.player_pitch_history[1:]
 
             self.smooth_pitch = self.player_pitch_history
             # self.smooth_pitch = smooth(self.player_pitch_history, window_len=self.player_pitch_history.shape[0], window="blackman")
@@ -110,7 +114,7 @@ class PitchBar(InstructionGroup):
                 else:
                     self.ptr_color.rgb = (1,1,1)
 
-                x = Window.width * width_ratio * (self.smooth_pitch[-1] + 1) // 14 + Window.width * width_ratio // (14 * 2)
+                x = Window.width * width_ratio * (self.player_pitch + 1) // 14 + Window.width * width_ratio // (14 * 2)
                 dx = Window.width * width_ratio // (14 * 8)
                 y = Window.height * height_ratio * 5 // 4 / 0.7
                 dy = Window.height * height_ratio // 5 / 0.49
