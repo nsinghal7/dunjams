@@ -139,6 +139,7 @@ class Level(InstructionGroup):
 
     def beat_on_exact(self, tick, _):
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, tick + kTicksPerQuarter)
+        self.pitch_bar.on_enemy_note(0)
         for eg in self.enemy_groups:
             eg.on_beat_exact()
             eg.on_beat(self.map, self.music_controller.get_music(), None)
