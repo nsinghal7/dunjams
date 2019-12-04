@@ -89,10 +89,14 @@ class EnemyGroup(InstructionGroup):
         return self.is_group_pacified() or (self.is_player_in_melody_threshold() and self.is_enemy_pacified(id))
 
     def on_beat_exact(self):
+        if self.is_group_pacified():
+            for e in self.enemies.objects:
+                e.set_color(1, 1, self.pitch_bar.base_midi)
         # player is far away, enemies passive
         if not self.is_player_in_sound_threshold():
-            for e in self.enemies.objects:
-                e.set_color(0, 0.8, self.pitch_bar.base_midi)
+            if not self.is_group_pacified():
+                for e in self.enemies.objects:
+                    e.set_color(0, 0.8, self.pitch_bar.base_midi)
         else:
             self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
             if self.is_group_pacified() or not self.is_player_in_melody_threshold():
