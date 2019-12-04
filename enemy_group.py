@@ -38,7 +38,7 @@ class EnemyGroup(InstructionGroup):
         self.projectiles = AnimGroup()
         self.add(self.enemies)
         for desc in enemy_descs:
-            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified))
+            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified, self.is_enemy_shooting))
 
         self.pitch_bar = pitch_bar
 
@@ -83,6 +83,9 @@ class EnemyGroup(InstructionGroup):
     # a callback for enemies to see if they're pacified
     def is_enemy_pacified(self, id):
         return id in self.get_pacified_enemies()
+
+    def is_enemy_shooting(self, id):
+        return not self.is_player_in_melody_threshold() or not self.is_enemy_pacified(id)
 
     def on_beat_exact(self):
         # player is far away, enemies passive
@@ -172,6 +175,4 @@ class EnemyActionDescription:
     def get_next_attack(self):
         attack = self.attacks[self.attack_index]
         self.attack_index = (self.attack_index + 1) % len(self.attacks)
-        if self.id in self.enemy_group.get_pacified_enemies():
-            return ""
         return attack
