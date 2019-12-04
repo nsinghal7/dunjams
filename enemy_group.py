@@ -77,7 +77,7 @@ class EnemyGroup(InstructionGroup):
             idx = (self.melody_index - 1) % len(self.melody)
             if idx < len(self.enemies.objects):
                 target = self.enemies.objects[idx]
-                return [target.id] if target.note == self.cur_pitch else []
+                return [target.id] if 60 + target.note % 12 == self.cur_pitch else []
             else:
                 return []
 
