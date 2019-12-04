@@ -7,6 +7,8 @@ EMPTY = " "
 PLAYER_START = "p"
 EXIT = "e"
 WALL = "w"
+LIGHT_FLOOR = "."
+PREVIEW_FLOOR = "-"
 SIDE_WALL = "s"
 SIDE_WALL2 = "2"
 CORNER_L = "l"
@@ -20,6 +22,8 @@ VALID_TILES = [EMPTY, PLAYER_START, EXIT, WALL]
 SPRITE_MAP = {
     WALL: 'wall_wall.png',
     EMPTY: 'sq_fl',
+    LIGHT_FLOOR: 'light_floor',
+    PREVIEW_FLOOR: 'blue_floor',
     EXIT: 'ladder.png',
     SIDE_WALL: 'side_wall.png',
     SIDE_WALL2: 'side_wall2.png',
@@ -46,7 +50,17 @@ class MapTile(InstructionGroup):
         if kind == EMPTY:
             self.color = Color(0.5, 0.5, 0.6)
             self.add(self.color)
-            self.sprite = SPRITE_PREFIX + SPRITE_MAP[kind] + str(randint(1, 4)) + '.png'
+            self.sprite = SPRITE_PREFIX + SPRITE_MAP[EMPTY] + str(randint(1, 4)) + '.png'
+
+        elif kind == LIGHT_FLOOR:
+            self.add(Color(1,1,1))
+            self.sprite = SPRITE_PREFIX + SPRITE_MAP[EMPTY] + str(randint(1, 2)) + '.png'
+
+        elif kind == PREVIEW_FLOOR:
+            self.add(Color(1,1,1))
+            self.sprite = SPRITE_PREFIX + SPRITE_MAP[LIGHT_FLOOR] + str(randint(1, 2)) + '.png'
+
+
 
         elif kind == EXIT:
             self.add(Rectangle(pos=location, size=self.map.tile_size(), color=(0,0,0)))

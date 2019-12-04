@@ -1,8 +1,7 @@
 swwwwwww2vvvvvvvvvvv
-s       2vvvvvswwew2
-s       2vvvvvs    2
-s       2vvvvvs    2
-s       wwwwwww    2
-sp                 2
-s       iwwwwwwwwwwr
-lwwwwwwwrvvvvvvvvvvv
+s-.....-2vvvvvswwew2
+s-.....-2vvvvvs....2
+s-.....-2vvvvvs....2
+s-.....-wwwwwww....2
+sp.....--   --.....2
+lwwwwwwwwwwwwwwwwwwr
