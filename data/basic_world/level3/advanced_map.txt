@@ -1,15 +1,15 @@
-vvvvvvvvwwwwwew
-vvvvvvvvw     w
-vvvvvvvvw     w
-vvvvwwwww     w
-vvwww......   w
-vvw........   w
-vvw........wwww
-vvw........wvvv
-www........wvvv
-w  ........wvvv
-w  .......wwvvv
-w  .......wvvvv
-w p   wwwwwvvvv
-w     wvvvvvvvv
-wwwwwwwvvvvvvvv
+vvvvvvvvswwwwe2
+vvvvvvvvs     2
+vvvvvvvvs     2
+vvvvswwww     2
+vvsww......   2
+vvs........   2
+vvs........iwwr
+vvs........2vvv
+sww........2vvv
+s  ........2vvv
+s  .......irvvv
+s  .......2vvvv
+s p   iwwwrvvvv
+s     2vvvvvvvv
+lwwwwwrvvvvvvvv
