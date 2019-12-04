@@ -86,29 +86,35 @@ class EnemyGroup(InstructionGroup):
         return id in self.get_pacified_enemies()
 
     def should_p_attack(self, id):
-        return self.is_player_in_melody_threshold() and self.is_enemy_pacified(id)
+        return self.is_group_pacified() or (self.is_player_in_melody_threshold() and self.is_enemy_pacified(id))
 
     def on_beat_exact(self):
+        if self.is_group_pacified():
+            for e in self.enemies.objects:
+                e.set_color(1, 1, self.pitch_bar.base_midi)
         # player is far away, enemies passive
         if not self.is_player_in_sound_threshold():
-            for e in self.enemies.objects:
-                e.set_color(0, 0.8, self.pitch_bar.base_midi)
+            if not self.is_group_pacified():
+                for e in self.enemies.objects:
+                    e.set_color(0, 0.8, self.pitch_bar.base_midi)
         else:
             self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
-            if not self.is_player_in_melody_threshold():
-                # player is previewing the enemies
-                for e in self.enemies.objects:
-                    e.set_color(0, 0.9, self.pitch_bar.base_midi)
+            if self.is_group_pacified() or not self.is_player_in_melody_threshold():
                 # play melody exactly on the beat so it doesn't sound weird
                 note = NoteGenerator(self.melody[self.melody_index], .6, timbre="square")
                 env = Envelope(note, .02, 1, .5, 1)
                 self.mixer.add(env)
 
-                # color the correct enemy
-                idx = (self.melody_index) % len(self.melody)
-                if idx < len(self.enemies.objects):
-                    target = self.enemies.objects[idx]
-                    target.set_color(0.75, 0.9, self.pitch_bar.base_midi)
+                if not self.is_group_pacified():
+                    # player is previewing the enemies
+                    for e in self.enemies.objects:
+                        e.set_color(0, 0.9, self.pitch_bar.base_midi)
+
+                    # color the correct enemy
+                    idx = (self.melody_index) % len(self.melody)
+                    if idx < len(self.enemies.objects):
+                        target = self.enemies.objects[idx]
+                        target.set_color(0.75, 0.9, self.pitch_bar.base_midi)
 
     def check_note(self, map, music, is_last):
         # check if player sang correct note (or if no note was required)
