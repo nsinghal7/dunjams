@@ -68,7 +68,7 @@ class EnemyGroup(InstructionGroup):
                 return [e.id for e in self.enemies.objects]
             else:
                 result = []
-                idx = (self.melody_index - 1) % len(self.melody)
+                idx = (self.melody_index - 1 - int(not self.pitch_matched)) % len(self.melody)
                 for i in range(self.melody_progress):
                     result.append(self.enemies.objects[idx - i].id)
                 return result
