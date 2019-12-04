@@ -62,6 +62,9 @@ class SplashScreen(InstructionGroup):
     def on_key_down(self, keycode, modifiers):
         self.game.next_screen()
 
+    def receive_audio(self, frames, num_channels):
+        pass
+
     def on_update(self):
         self.rect.size = Window.size
 
@@ -138,7 +141,7 @@ class Level(InstructionGroup):
         self.cmd_beat_on_exact = self.sched.post_at_tick(self.beat_on_exact, tick + kTicksPerQuarter)
         for eg in self.enemy_groups:
             eg.on_beat_exact()
-            eg.on_beat(self.map, None, None)
+            eg.on_beat(self.map, self.music_controller.get_music(), None)
 
         self.player.on_beat_exact()
 
@@ -153,8 +156,8 @@ class Level(InstructionGroup):
         self.music_controller.beat_off()
         music_input = self.music_controller.get_music()
 
-        for eg in self.enemy_groups:
-            eg.on_half_beat(self.map, music_input)
+        #for eg in self.enemy_groups:
+        #    eg.on_half_beat(self.map, music_input)
 
     def beat_off(self, tick, _):
         self.cmd_beat_off = self.sched.post_at_tick(self.beat_off, tick + kTicksPerQuarter)
@@ -176,7 +179,7 @@ class Level(InstructionGroup):
             elif self.restart_pause_time_remaining == 0:
                 self.player.set_disabled(False)
         else:
-            self.player.on_beat(self.map, None, movement)
+            self.player.on_beat(self.map, self.music_controller.get_music(), movement)
 
             # handle game over
             if self.map.is_square_dangerous(self.map.player_location()):
@@ -187,6 +190,10 @@ class Level(InstructionGroup):
                 self.game.next_screen()
 
         print("beat off")
+
+    def receive_audio(self, frames, num_channels):
+        for eg in self.enemy_groups:
+            eg.check_note(self.map, self.music_controller.get_music(), False)
 
     def restart(self):
         self.player.set_disabled(True)
@@ -257,6 +264,7 @@ class Game(BaseWidget):
 
     def receive_audio(self, frames, num_channels):
         self.music_controller.receive_audio(frames, num_channels)
+        self.screen.receive_audio(frames, num_channels)
 
     def on_key_down(self, keycode, modifiers):
         self.movement_controller.on_key_down(keycode, modifiers)

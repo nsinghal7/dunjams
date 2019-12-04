@@ -78,7 +78,7 @@ class Enemy(Entity):
             self.graphic.set_sprite(self.sprites["angry"])
 
         projectile = self.get_projectile()
-        if projectile != None:
+        if projectile is not None:
             self.projectiles.add(projectile)
 
         for p in self.projectiles.objects:

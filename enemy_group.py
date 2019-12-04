@@ -92,13 +92,13 @@ class EnemyGroup(InstructionGroup):
         # player is far away, enemies passive
         if not self.is_player_in_sound_threshold():
             for e in self.enemies.objects:
-                e.set_color(0, 0.8, 0)
+                e.set_color(0, 0.8, self.pitch_bar.base_midi)
         else:
             self.pitch_bar.on_enemy_note(self.melody[self.melody_index])
             if not self.is_player_in_melody_threshold():
                 # player is previewing the enemies
                 for e in self.enemies.objects:
-                    e.set_color(0, 0.9, 0)
+                    e.set_color(0, 0.9, self.pitch_bar.base_midi)
                 # play melody exactly on the beat so it doesn't sound weird
                 note = NoteGenerator(self.melody[self.melody_index], .6, timbre="square")
                 env = Envelope(note, .02, 1, .5, 1)
@@ -116,7 +116,7 @@ class EnemyGroup(InstructionGroup):
 
         if not self.pitch_matched and self.is_player_in_melody_threshold():
             if self.melody[self.melody_index] == 0 or (music.is_pitch() and
-                            music.get_midi() == self.melody[self.melody_index - 1]):
+                            music.to_saturation(self.melody[self.melody_index - 1]) == 1):
                 # correct pitch
                 self.melody_progress += 1
                 self.pitch_matched = True
@@ -128,18 +128,22 @@ class EnemyGroup(InstructionGroup):
                 self.melody_complete = True
 
             if music.is_pitch():
-                self.cur_pitch = music.get_midi()
+                self.cur_pitch = music.get_held_midi()
 
             for e in self.enemies.objects:
                 e.set_color(0, 1, self.pitch_bar.base_midi)
+            self.enemies.objects[self.melody_index - 1].set_color(music.to_saturation(self.melody[self.melody_index - 1]), 1, self.pitch_bar.base_midi)
             for eid in self.get_pacified_enemies():
                 self.enemies.objects[eid].set_color(1, 1,self.pitch_bar.base_midi)
+        elif not self.pitch_matched:
+            self.cur_pitch = 0
 
         for enemy in self.enemies.objects:
-            enemy.update_sprite(map, music)
+            enemy.update_sprite()
 
     def on_beat(self, map, music, movement):
         self.check_note(map, music, True)
+        self.pitch_matched = False
 
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
