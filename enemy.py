@@ -19,7 +19,7 @@ BOUNCE_TIME = 0.15
 MAX_BOUNCE_HEIGHT = 0.5
 
 class Enemy(Entity):
-    def __init__(self, desc, action_description, map, is_enemy_pacified, is_enemy_shooting):
+    def __init__(self, desc, action_description, map, is_enemy_pacified, should_p_attack):
         super(Enemy, self).__init__()
         # TODO
         # init_pos is (row, col)
@@ -37,7 +37,7 @@ class Enemy(Entity):
         # this is a callback from enemy_group, which takes in an enemy id and returns
         # whether it is pacified or not (usually just call it with your own id)
         self.is_enemy_pacified = is_enemy_pacified
-        self.is_enemy_shooting = is_enemy_shooting
+        self.should_p_attack = should_p_attack
 
         pixel_pos = self.map.tile_to_pixels(self.pos)
 
@@ -53,8 +53,8 @@ class Enemy(Entity):
 
     # return the next projectile, or None if no projectile is being created
     def get_projectile(self):
-        next_attack = self.actions.get_next_attack()
-        if self.is_shooting() and next_attack != '':
+        next_attack = self.actions.get_next_attack(self.should_p_attack(self.id))
+        if next_attack != '':
             p_pos = np.array(self.pos)
             return Projectile(p_pos, next_attack, self.map, self.sprites["projectile"])
         return None
@@ -90,9 +90,6 @@ class Enemy(Entity):
 
     def is_pacified(self):
         return self.is_enemy_pacified(self.id)
-
-    def is_shooting(self):
-        return self.is_enemy_shooting(self.id)
 
     def is_passable(self):
         # once pacified, the player cannot accidentally run into a pacified enemy and get killed

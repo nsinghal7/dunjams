@@ -38,7 +38,7 @@ class EnemyGroup(InstructionGroup):
         self.projectiles = AnimGroup()
         self.add(self.enemies)
         for desc in enemy_descs:
-            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified, self.is_enemy_shooting))
+            self.enemies.add(Enemy(desc, EnemyActionDescription(desc, self), map, self.is_enemy_pacified, self.should_p_attack))
 
         self.pitch_bar = pitch_bar
         self.pitch_matched = False # True if matched the pitch this beat already
@@ -85,8 +85,8 @@ class EnemyGroup(InstructionGroup):
     def is_enemy_pacified(self, id):
         return id in self.get_pacified_enemies()
 
-    def is_enemy_shooting(self, id):
-        return not self.is_player_in_melody_threshold() or not self.is_enemy_pacified(id)
+    def should_p_attack(self, id):
+        return self.is_player_in_melody_threshold() and self.is_enemy_pacified(id)
 
     def on_beat_exact(self):
         # player is far away, enemies passive
@@ -143,10 +143,11 @@ class EnemyGroup(InstructionGroup):
 
     def on_beat(self, map, music, movement):
         self.check_note(map, music, True)
-        self.pitch_matched = False
 
         for enemy in self.enemies.objects:
             enemy.on_beat(map, music, movement)
+
+        self.pitch_matched = False
 
         self.melody_index = (self.melody_index + 1) % len(self.melody)
 
@@ -159,6 +160,7 @@ class EnemyActionDescription:
     def __init__(self, description, enemy_group):
         self.motions = description["motions"]
         self.attacks = description["attacks"]
+        self.p_attacks = description["p_attacks"] if "p_attacks" in description else None
         self.id = description["id"]
         self.enemy_group = enemy_group
 
@@ -176,7 +178,10 @@ class EnemyActionDescription:
         self.motion_index = (self.motion_index + 1) % len(self.motions)
         return old_pos[0] + drow, old_pos[1] + dcol
 
-    def get_next_attack(self):
-        attack = self.attacks[self.attack_index]
+    def get_next_attack(self, should_p_attack):
+        if should_p_attack:
+            attack = self.p_attacks[self.attack_index] if self.p_attacks else ""
+        else:
+            attack = self.attacks[self.attack_index]
         self.attack_index = (self.attack_index + 1) % len(self.attacks)
         return attack
