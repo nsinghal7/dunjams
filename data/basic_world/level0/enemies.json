@@ -5,7 +5,7 @@
           "init_pos": [5, 12],
           "motions": [[0, 0], [0, 0]],
           "attacks": ["u", "u"],
-          "p_attacks": ["", "u"],
+          "p_attacks": ["u", ""],
           "note": 60,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -18,7 +18,7 @@
           "init_pos": [1, 13],
           "motions": [[0, 0]],
           "attacks": ["d", "d"],
-          "p_attacks": ["d", ""],
+          "p_attacks": ["", "d"],
           "note": 62,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
@@ -41,8 +41,8 @@
           "init_pos": [4, 26],
           "motions": [[0, 0], [0, 0]],
           "attacks": ["l", "l"],
-          "p_attacks": ["", "l"],
-          "note": 60,
+          "p_attacks": ["l", ""],
+          "note": 64,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
             "pacified": "./data/sprites/happy_enemy_w.PNG",
@@ -55,7 +55,7 @@
           "motions": [[0, 0]],
           "attacks": ["u", "u"],
           "p_attacks": ["", "u"],
-          "note": 62,
+          "note": 65,
           "sprites": {
             "angry": "./data/sprites/angry_enemy_w.PNG",
             "pacified": "./data/sprites/happy_enemy_w.PNG",
@@ -63,7 +63,7 @@
           }
         }
       ],
-    "melody": [60, 62],
+    "melody": [64, 65],
     "durations": [2, 2],
     "pacify": "all",
     "bpm": 124,
