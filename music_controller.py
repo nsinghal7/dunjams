@@ -1,3 +1,5 @@
+from config import POP_THRESHOLD_RATIO
+
 PITCH_SUSTAIN_THRESHOLD = 5
 SUSTAIN_TRAILING_BUFFER = 2
 
@@ -46,7 +48,8 @@ class Pitch(Music):
         return True
 
     def set_tempo(self, tempo):
-        self.pop_threshold = int(round(1684 / tempo - 9.5))
+        self.pop_threshold = int(round(POP_THRESHOLD_RATIO * (1684 / tempo - 9.5)))
+        print(self.pop_threshold)
 
     def add_pitch(self, midi):
         midi = int(round(midi))

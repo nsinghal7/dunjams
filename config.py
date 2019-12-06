@@ -6,6 +6,7 @@ from environment import ENVIRONMENT # THIS MUST EXIST, BUT DON'T PUSH IT TO REPO
 
 # TODO: define other environments and calibrate values
 HALF_BEAT_TICKS = 240
+POP_THRESHOLD_RATIO = 1.0
 if ENVIRONMENT == 'mac':
     EPSILON_BEFORE = 40 / 960
     EPSILON_AFTER = 140 / 960
@@ -14,6 +15,7 @@ elif ENVIRONMENT == '4-270':
     EPSILON_BEFORE = 40 / 960
     EPSILON_AFTER = 180 / 960
     SILENCE_THRESHOLD = -20
+    POP_THRESHOLD_RATIO = .6
 elif ENVIRONMENT == 'windows':
     EPSILON_BEFORE = 40 / 960
     EPSILON_AFTER = 160 / 960
